@@ -48,6 +48,25 @@ jobs:
         with:
           chrome-version: stable
 
+      # TEMPORARY diagnostic. Prints no part of the token -- only its length,
+      # whether it has the expected prefix, and whether stray whitespace crept
+      # in during copy/paste. Remove once @claude is working.
+      - name: Check the token secret arrived intact
+        env:
+          TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          echo "length: ${#TOKEN}"
+          case "$TOKEN" in
+            sk-ant-oat01-*) echo "prefix: ok" ;;
+            "")             echo "prefix: SECRET IS EMPTY" ;;
+            *)              echo "prefix: UNEXPECTED - not an OAuth token" ;;
+          esac
+          case "$TOKEN" in
+            *[![:print:]]*) echo "whitespace: CONTAINS a newline or control character" ;;
+            *' '*)          echo "whitespace: CONTAINS a space" ;;
+            *)              echo "whitespace: clean" ;;
+          esac
+
       - uses: anthropics/claude-code-action@v1
         env:
           CHROME: ${{ steps.chrome.outputs.chrome-path }}
