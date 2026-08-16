@@ -62,5 +62,5 @@ jobs:
             whether the poster fits the page -- a separate workflow checks that
             mechanically.
           claude_args: |
-            --max-turns 20
-            --allowedTools "mcp__github_inline_comment__create_inline_comment"
+            --max-turns 40
+            --allowedTools "Glob,Grep,LS,Read,mcp__github_comment__update_claude_comment,mcp__github_inline_comment__create_inline_comment"
