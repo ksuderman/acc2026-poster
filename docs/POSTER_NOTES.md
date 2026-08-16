@@ -73,6 +73,58 @@ Sourced from session notes and code in `galaxy-k8s-boot`, `galaxy-k8s-boot-inter
 - **Orbit/Loom** as interactive tool `interactive_tool_orbit`, Loom in `LOOM_MODE=remote`, via `galaxy-mcp` + in-cluster LiteLLM → Vertex Gemini. "list my histories" validated end to end — `galaxy-k8s-boot` `SESSION_NOTES.md` and `docs/orbit-interactive-tool-design.md`. Note: Orbit/Loom appear **only** in galaxy-k8s-boot, not in galaxy-helm or galaxy-dev.
 - **Benchmarks** behind the "answer competitively" / "seven times faster" claims: `git show d3d57afb6f` in galaxy-dev (routing + error_analysis across gpt-oss-120b, Llama-4-Maverick, Llama-3.3-70B). Model names were deliberately left off the poster; add them if asked.
 
+## Ad-like redesign (2026-08-16)
+
+At the authors' request, the poster was rewritten to read more like an Apple
+product-launch ad than a paper abstract: lead with the impact number, cut the
+explanation. The expectation is that the authors talk through the "why" while
+standing next to the poster, not that the poster explains itself unattended.
+
+- Every card that had a paragraph-plus-bullet-list explanation was cut down to
+  a big stat (`.metric`) or a couple of tags. Full sentences were removed
+  wherever a number or a 2-3 word phrase said the same thing.
+- Added `.metric.solo` (in the `.metrics` grid CSS): a full-width variant of
+  the existing metric tile at a much bigger font (58pt vs. 36pt), for a single
+  standout number rather than a paired row. Used for "No SSH", "2–128 vCPUs",
+  "1 command", "44 tools", and (stacked, one per row) the two Maintenance
+  stats.
+- "Maintenance, Simplified" and "Elastic Compute" (column 2) lost their
+  two `<h3>`-headed bullet lists (Terra team / Galaxy team, TPV routing
+  steps) entirely — those were the most prose-heavy blocks on the poster.
+  Elastic Compute's routing logic (≤1 core/4GB local vs. everything else to
+  Batch) is now a two-box `.paths` diagram instead of a sentence, reusing the
+  component already built for the AI band's self-hosted/hosted comparison.
+- "Where This Is Going" (six bulleted, described roadmap items) became a bare
+  tag row — the items are still all there, just as 2-4 word labels.
+- Column heights were rebalanced and verified by rendering, not estimated.
+- Numbers themselves are unchanged from the prior version; only their
+  presentation changed. No new facts were introduced.
+
+### Content restored to fill the page (same day)
+
+The first pass of the redesign cut too much: it measured **33.26in of 44in**,
+leaving nearly **11in of blank paper** — about a quarter of the board — and the
+three columns ended at very different heights. It read as unfinished rather than
+deliberately spare.
+
+Content was restored until the page was full again, keeping the ad-like idiom
+(big number first, short supporting line) rather than reverting to paragraphs:
+
+| Card | Restored |
+|---|---|
+| Galaxy on AnVIL | Two intro sentences — what Galaxy is, and the VM/Batch split |
+| Architecture | Session-critical work stays local; data disks survive redeploy |
+| Deployment | The four-step "The VM provisions itself" boot chain; component versions on the tags |
+| Maintenance | Both `<h3>` team lists (3 items each, trimmed); the pre-built image caption; the golden Batch image callout |
+| Elastic Compute | TPV lead-in; the literal right-sizing explanation; the reference-data + job-ID callout |
+| Cost | The chart's premise (managed cluster bills continuously); idle/headroom/scale consequences |
+| Try It | One-line intro; repository names with what each one is |
+| Where This Is Going | Six roadmap items back to described bullets from bare tags |
+| AI band | The GalaxyAI router and MCP paragraphs; two bullets per model path; the full NIH policy sentence |
+
+**Result: 42.66in of 44in — 1.34in of slack**, columns within ~0.5in of each
+other. Nothing from "Deliberately off the poster" was reintroduced.
+
 ## Deliberately off the poster
 
 The user asked to **remove all discussion of problems we had to resolve**, so the following are researched and available but intentionally not shown. Do not reintroduce them without asking:
