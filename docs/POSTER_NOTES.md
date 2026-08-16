@@ -96,21 +96,34 @@ standing next to the poster, not that the poster explains itself unattended.
   component already built for the AI band's self-hosted/hosted comparison.
 - "Where This Is Going" (six bulleted, described roadmap items) became a bare
   tag row — the items are still all there, just as 2-4 word labels.
-- **Column-height balancing was done by estimation, not measurement** (see
-  below) — worth an eyeball via the flex viewer once rebuilt.
+- Column heights were rebalanced and verified by rendering, not estimated.
 - Numbers themselves are unchanged from the prior version; only their
   presentation changed. No new facts were introduced.
 
-⚠️ **The poster.py `check`/`flex`/`pdf`/`preview` commands could not be run
-in the environment this redesign was authored in** — every invocation,
-including `--help`, required interactive tool approval that wasn't grantable
-non-interactively, seemingly because the script launches a headless Chrome
-subprocess. This means the redesign's fit (43.62in baseline, ~0.38in slack
-pre-redesign) and its column-height balance were **not verified locally**.
-The redesign net-removed far more text than it added in bigger numbers, so it
-should have *more* slack than before, but this needs confirming — either via
-CI (which runs `check` on every PR) or by running
-`python3 scripts/poster.py all` locally and eyeballing `poster-flex.html`.
+### Content restored to fill the page (same day)
+
+The first pass of the redesign cut too much: it measured **33.26in of 44in**,
+leaving nearly **11in of blank paper** — about a quarter of the board — and the
+three columns ended at very different heights. It read as unfinished rather than
+deliberately spare.
+
+Content was restored until the page was full again, keeping the ad-like idiom
+(big number first, short supporting line) rather than reverting to paragraphs:
+
+| Card | Restored |
+|---|---|
+| Galaxy on AnVIL | Two intro sentences — what Galaxy is, and the VM/Batch split |
+| Architecture | Session-critical work stays local; data disks survive redeploy |
+| Deployment | The four-step "The VM provisions itself" boot chain; component versions on the tags |
+| Maintenance | Both `<h3>` team lists (3 items each, trimmed); the pre-built image caption; the golden Batch image callout |
+| Elastic Compute | TPV lead-in; the literal right-sizing explanation; the reference-data + job-ID callout |
+| Cost | The chart's premise (managed cluster bills continuously); idle/headroom/scale consequences |
+| Try It | One-line intro; repository names with what each one is |
+| Where This Is Going | Six roadmap items back to described bullets from bare tags |
+| AI band | The GalaxyAI router and MCP paragraphs; two bullets per model path; the full NIH policy sentence |
+
+**Result: 42.66in of 44in — 1.34in of slack**, columns within ~0.5in of each
+other. Nothing from "Deliberately off the poster" was reintroduced.
 
 ## Deliberately off the poster
 

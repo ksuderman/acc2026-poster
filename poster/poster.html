@@ -461,7 +461,8 @@
 
     <div class="card">
       <h2>Galaxy on AnVIL</h2>
-      <p>A familiar Galaxy, on AnVIL's secure cloud &mdash; <span class="highlight-text">without managing infrastructure</span>.</p>
+      <p>A familiar Galaxy, on AnVIL's secure cloud &mdash; researchers run established tools, build workflows and share results <span class="highlight-text">without managing command-line software or cloud infrastructure</span>.</p>
+      <p>Galaxy's core services stay on a small, cost-conscious VM; heavy jobs go to <span class="highlight-text">Google Cloud Batch</span>, which provisions right-sized resources on demand and releases them when the work is done.</p>
       <div class="tags">
         <span class="tag">Easier to maintain</span>
         <span class="tag">Elastic compute</span>
@@ -499,6 +500,8 @@
       </div>
       <ul class="annotation-list">
         <li>No idle cluster &mdash; one small VM, always on</li>
+        <li>Session-critical work &mdash; upload, data fetch, metadata &mdash; stays local for responsiveness</li>
+        <li>Data disks survive redeploy: reattach plus CloudNativePG <code>skip-initdb</code> restores the database in place</li>
       </ul>
     </div>
 
@@ -523,6 +526,29 @@
         </div>
       </div>
 
+      <h3>The VM provisions itself</h3>
+      <div class="workflow-box">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>Launch a VM with a handful of metadata keys</div>
+        </div>
+        <div class="step"><div class="arrow">&darr;</div></div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>cloud-init formats and mounts the data disks</div>
+        </div>
+        <div class="step"><div class="arrow">&darr;</div></div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div><code>ansible-pull</code> fetches the playbook straight from GitHub</div>
+        </div>
+        <div class="step"><div class="arrow">&darr;</div></div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div>RKE2, Helm charts, storage, ingress and Galaxy come up in order</div>
+        </div>
+      </div>
+
       <div class="metrics">
         <div class="metric solo">
           <div class="num">No SSH</div>
@@ -530,8 +556,9 @@
         </div>
       </div>
       <div class="tags">
-        <span class="tag">RKE2</span>
-        <span class="tag">Helm</span>
+        <span class="tag">RKE2 v1.36.2</span>
+        <span class="tag">Helm v4.2.2</span>
+        <span class="tag">Galaxy chart 6.8.2</span>
         <span class="tag">CloudNativePG</span>
         <span class="tag">cert-manager</span>
         <span class="tag">NGINX ingress</span>
@@ -556,7 +583,23 @@
           <div class="lbl">SSH sessions or manual steps</div>
         </div>
       </div>
-      <p><span class="highlight-text">Each team changes only what it owns.</span> Releases propagate themselves.</p>
+      <p class="caption">The pre-built image ships RKE2, Helm, Docker, a configured CVMFS client and fifteen pre-pulled container images, so the boot path does almost no downloading.</p>
+      <p><span class="highlight-text">Each team changes only what it owns.</span></p>
+      <h3>For the Terra team</h3>
+      <ul class="annotation-list">
+        <li><strong>No custom VM image to rebuild.</strong> Terra supplies instance metadata; the playbook is fetched from Git at boot.</li>
+        <li><strong>No code change to move Galaxy versions.</strong> The release is a Helm chart version in the playbook.</li>
+        <li><strong>Nothing hardcoded per workspace.</strong> Project, region, network, NFS export and external IP are discovered at runtime.</li>
+      </ul>
+      <h3>For the Galaxy team</h3>
+      <ul class="annotation-list">
+        <li><strong>Releases propagate themselves.</strong> A <code>galaxy-helm</code> release opens a pull request against the playbook, chart version bumped.</li>
+        <li><strong>Mixins instead of forks.</strong> Composable Helm value files deep-merge in order, under user choices rather than over them.</li>
+        <li><strong>Continuous testing</strong> launches a real GCE instance on every pull request.</li>
+      </ul>
+      <div class="callout">
+        The golden Batch VM image is published once in a shared project and readable by all authenticated users, so a workspace in <em>any</em> project can boot Batch workers from it &mdash; the image it runs is independent of the project the job runs in.
+      </div>
       <div class="tags">
         <span class="tag">No custom VM image</span>
         <span class="tag">One source of truth</span>
@@ -583,10 +626,15 @@
           <ul><li>everything larger</li></ul>
         </div>
       </div>
+      <p>Routing is driven by <span class="tool-name">Total Perspective Vortex</span>. Per-tool sizing is declarative, so demanding tools get real hardware without provisioning it in advance:</p>
       <div class="tags">
         <span class="tag">MetaPhlAn &mdash; 16c / 96&nbsp;GB</span>
         <span class="tag">FastQC &mdash; 16c / 64&nbsp;GB</span>
         <span class="tag">fastp &mdash; 8c / 32&nbsp;GB</span>
+      </div>
+      <p><strong>Right-sizing is literal.</strong> The runner maps requested cores and memory onto a machine shape by memory-per-core ratio and picks the smallest size that fits. Oversized jobs are rejected rather than silently shrunk, so multi-core work really does leave the node.</p>
+      <div class="callout">
+        <strong>Reference data comes along.</strong> Batch workers boot from the same CVMFS-preconfigured image as the Galaxy VM and bind-mount the Galaxy reference data read-only. Every Batch job carries its Galaxy job ID, so work can be followed from the Galaxy UI into the Cloud Console.
       </div>
     </div>
 
@@ -597,6 +645,8 @@
 
     <div class="card">
       <h2>Cost: Paying for Work, Not Uptime</h2>
+
+      <p>A managed Kubernetes cluster bills continuously for a control plane and a node pool sized for the biggest job it might ever see. A small VM plus Batch bills a modest fixed rate and adds cost only when analyses run.</p>
 
       <div class="figure">
         <img src="images/cost-time.png" alt="Cumulative cost over one week: managed Kubernetes versus VM plus Google Cloud Batch">
@@ -613,33 +663,39 @@
           <div class="lbl">per week &mdash; vs. ~$263 managed</div>
         </div>
       </div>
+      <ul class="annotation-list">
+        <li><strong>Idle is cheap.</strong> A Galaxy that is up but unused costs one small VM.</li>
+        <li><strong>Headroom is free.</strong> Nothing is provisioned in advance for the largest anticipated job.</li>
+        <li><strong>Effectively unlimited scale.</strong> Concurrency is bounded by cloud quota, not a fixed node pool.</li>
+      </ul>
     </div>
 
     <div class="card">
       <h2>Try It</h2>
+      <p>Everything here is open source, and a single command launches a working Galaxy on Google Cloud.</p>
       <div class="metrics">
         <div class="metric solo">
           <div class="num">1 command</div>
           <div class="lbl">launches a working Galaxy on Google Cloud &mdash; open source, start to finish</div>
         </div>
       </div>
-      <div class="tags">
-        <span class="tag">galaxy-k8s-boot</span>
-        <span class="tag">galaxy-helm</span>
-        <span class="tag">anvilproject.org</span>
-      </div>
+      <ul class="annotation-list">
+        <li><span class="tool-name">galaxyproject/galaxy-k8s-boot</span> &mdash; the Ansible playbook and launcher</li>
+        <li><span class="tool-name">galaxyproject/galaxy-helm</span> &mdash; the Galaxy Helm chart</li>
+        <li><span class="tool-name">anvilproject.org</span> &mdash; AnVIL documentation and access</li>
+      </ul>
     </div>
 
     <div class="card">
       <h2>Where This Is Going</h2>
-      <div class="tags">
-        <span class="tag">Spot instances</span>
-        <span class="tag">Object storage</span>
-        <span class="tag">More interactive tools</span>
-        <span class="tag">Published benchmarks</span>
-        <span class="tag">GalaxyAI rollout</span>
-        <span class="tag">Deeper Terra integration</span>
-      </div>
+      <ul class="annotation-list">
+        <li><strong>Spot instances for Batch workers</strong> &mdash; a further step down in cost for fault-tolerant jobs</li>
+        <li><strong>Object storage in place of NFS</strong> &mdash; Batch workers mounting a bucket directly</li>
+        <li><strong>Broader interactive tool coverage</strong> on AnVIL</li>
+        <li><strong>Published benchmarks</strong> of deployment time and per-workflow cost</li>
+        <li><strong>GalaxyAI rollout</strong> once NIH guidance is settled</li>
+        <li><strong>Deeper Terra integration</strong> &mdash; workspace data sources, provenance and result hand-off</li>
+      </ul>
     </div>
 
   </div>
@@ -659,25 +715,28 @@
             <div class="lbl">exposed by Galaxy's MCP server &mdash; an agent inherits exactly a user's authorization</div>
           </div>
         </div>
-        <p><span class="tool-name">GalaxyAI</span> routes each question to a specialist agent. <span class="tool-name">Orbit</span> + <span class="tool-name">Loom</span> bring the chat interface into Galaxy as an Interactive Tool.</p>
+        <p><span class="tool-name">GalaxyAI</span> is a multi-agent system inside Galaxy: a router hands each question to a specialist &mdash; error analysis, tool recommendation, history, training &mdash; and every answer is labelled with the agent that produced it.</p>
+        <p>Agents reach Galaxy through its <strong>Model Context Protocol server</strong>, which exposes histories, datasets, tools, jobs and workflows as typed operations routed through Galaxy's own service layer. <span class="tool-name">Orbit</span>, running the <span class="tool-name">Loom</span> agent, provides the chat interface &mdash; on AnVIL it is packaged as a Galaxy <strong>Interactive Tool</strong>, launched from the tool panel and running inside the user's own instance.</p>
 
         <h3>Where does the model run?</h3>
         <div class="paths">
           <div class="path-box">
             <div class="p-title">Self-hosted</div>
             <ul>
-              <li>No egress &mdash; GPU billed by the hour</li>
+              <li>Runs inside the trust boundary; prompts never leave</li>
+              <li>Open weights, no per-token charge &mdash; but a GPU billed by the hour, busy or idle</li>
             </ul>
           </div>
           <div class="path-box accent">
             <div class="p-title">Gemini for Government</div>
             <ul>
-              <li>Stronger reasoning &mdash; per-token, egresses</li>
+              <li>Stronger reasoning and tool use, nothing to keep warm</li>
+              <li>Per-token pricing, and prompts egress from the boundary</li>
             </ul>
           </div>
         </div>
         <div class="callout">
-          Pending <span class="highlight-text">NIH policy guidance</span> on LLMs with controlled-access data.
+          Broader rollout is <span class="highlight-text">pending NIH policy guidance</span> on using large language models with controlled-access data. <strong>Resolving the policy question, not the engineering, is what determines how GalaxyAI reaches the AnVIL community.</strong>
         </div>
       </div>
     </div>
