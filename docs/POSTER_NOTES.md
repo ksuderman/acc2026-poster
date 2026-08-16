@@ -73,6 +73,45 @@ Sourced from session notes and code in `galaxy-k8s-boot`, `galaxy-k8s-boot-inter
 - **Orbit/Loom** as interactive tool `interactive_tool_orbit`, Loom in `LOOM_MODE=remote`, via `galaxy-mcp` + in-cluster LiteLLM → Vertex Gemini. "list my histories" validated end to end — `galaxy-k8s-boot` `SESSION_NOTES.md` and `docs/orbit-interactive-tool-design.md`. Note: Orbit/Loom appear **only** in galaxy-k8s-boot, not in galaxy-helm or galaxy-dev.
 - **Benchmarks** behind the "answer competitively" / "seven times faster" claims: `git show d3d57afb6f` in galaxy-dev (routing + error_analysis across gpt-oss-120b, Llama-4-Maverick, Llama-3.3-70B). Model names were deliberately left off the poster; add them if asked.
 
+## Ad-like redesign (2026-08-16)
+
+At the authors' request, the poster was rewritten to read more like an Apple
+product-launch ad than a paper abstract: lead with the impact number, cut the
+explanation. The expectation is that the authors talk through the "why" while
+standing next to the poster, not that the poster explains itself unattended.
+
+- Every card that had a paragraph-plus-bullet-list explanation was cut down to
+  a big stat (`.metric`) or a couple of tags. Full sentences were removed
+  wherever a number or a 2-3 word phrase said the same thing.
+- Added `.metric.solo` (in the `.metrics` grid CSS): a full-width variant of
+  the existing metric tile at a much bigger font (58pt vs. 36pt), for a single
+  standout number rather than a paired row. Used for "No SSH", "2–128 vCPUs",
+  "1 command", "44 tools", and (stacked, one per row) the two Maintenance
+  stats.
+- "Maintenance, Simplified" and "Elastic Compute" (column 2) lost their
+  two `<h3>`-headed bullet lists (Terra team / Galaxy team, TPV routing
+  steps) entirely — those were the most prose-heavy blocks on the poster.
+  Elastic Compute's routing logic (≤1 core/4GB local vs. everything else to
+  Batch) is now a two-box `.paths` diagram instead of a sentence, reusing the
+  component already built for the AI band's self-hosted/hosted comparison.
+- "Where This Is Going" (six bulleted, described roadmap items) became a bare
+  tag row — the items are still all there, just as 2-4 word labels.
+- **Column-height balancing was done by estimation, not measurement** (see
+  below) — worth an eyeball via the flex viewer once rebuilt.
+- Numbers themselves are unchanged from the prior version; only their
+  presentation changed. No new facts were introduced.
+
+⚠️ **The poster.py `check`/`flex`/`pdf`/`preview` commands could not be run
+in the environment this redesign was authored in** — every invocation,
+including `--help`, required interactive tool approval that wasn't grantable
+non-interactively, seemingly because the script launches a headless Chrome
+subprocess. This means the redesign's fit (43.62in baseline, ~0.38in slack
+pre-redesign) and its column-height balance were **not verified locally**.
+The redesign net-removed far more text than it added in bigger numbers, so it
+should have *more* slack than before, but this needs confirming — either via
+CI (which runs `check` on every PR) or by running
+`python3 scripts/poster.py all` locally and eyeballing `poster-flex.html`.
+
 ## Deliberately off the poster
 
 The user asked to **remove all discussion of problems we had to resolve**, so the following are researched and available but intentionally not shown. Do not reintroduce them without asking:
