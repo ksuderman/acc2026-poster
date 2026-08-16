@@ -30,6 +30,10 @@ python3 scripts/poster.py check
 This is not optional and it is not slow (about 3 seconds). Never report a
 content change as complete without running it.
 
+The check needs headless Chrome. It is available in GitHub Actions, and the
+workflow allowlists this exact command — if it appears blocked, say so rather
+than pushing an unverified layout.
+
 If it fails, `docs/POSTER_NOTES.md` lists the levers for reclaiming space in
 order of least damage. Prefer those in order; shrinking the type is a last
 resort, since it has already been reduced ~10% from the design-system defaults.
