@@ -1,0 +1,66 @@
+name: Claude Review
+
+# Reviews poster changes against the rules recorded in CLAUDE.md and
+# docs/POSTER_NOTES.md -- content the authors deliberately removed, the no-email
+# rule, exact grant numbers, palette. The mechanical "does it still fit the
+# page" check lives in poster.yml, not here.
+#
+# Delete this file if the reviews are not earning their keep; nothing else
+# depends on it.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'poster/**'
+      - 'docs/**'
+
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # Fork pull requests do not receive secrets, so the review cannot run there.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Review the poster changes in this pull request against the rules the
+            authors have already settled on. Read CLAUDE.md and
+            docs/POSTER_NOTES.md first -- especially the "Deliberately off the
+            poster" section, which records content that was removed on purpose
+            and must not come back.
+
+            Comment only on things that are actually wrong:
+
+            - Content reintroduced that the notes say was deliberately removed
+            - An email address appearing anywhere on the poster
+            - Grant numbers altered from NHGRI U24HG010262, U24HG010263, U24HG006620
+            - Colours outside the AnVIL palette in CLAUDE.md
+            - A factual claim changed with no stated source, or one contradicting
+              the sourced facts in docs/POSTER_NOTES.md (note that "~6 min" is
+              correct and the older 15-20 min figure is stale)
+            - External stylesheets, CDN links, or absolute image paths, which
+              break the poster's self-contained single-file design
+
+            Post an inline comment on each real problem. If there are none, say
+            so in one short summary comment and stop. Do not review layout
+            aesthetics or suggest stylistic rewrites, and do not comment on
+            whether the poster fits the page -- a separate workflow checks that
+            mechanically.
+          claude_args: |
+            --max-turns 20
+            --allowedTools "mcp__github_inline_comment__create_inline_comment"

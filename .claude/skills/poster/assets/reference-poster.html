@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NLP in Galaxy - GCC2026 Poster</title>
+<style>
+  @page { size: 48in 36in; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 48in; height: 36in;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #f0f0ec;
+    color: #2c2c2c;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 0.4in;
+    gap: 0.3in;
+  }
+
+  /* ── Galaxy brand colors ── */
+  /* Dark gray:  #4a4a4a  (logo text)       */
+  /* Gold:       #c9b613  (logo accent)     */
+  /* Warm gray:  #6b6b6b  (secondary text)  */
+  /* Header bg:  #2c2c2c  (near-black)      */
+
+  /* ── Header ── */
+  .header {
+    background: #2c2c2c;
+    color: white;
+    padding: 0.4in 0.6in;
+    border-radius: 0.15in;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5in;
+    border-bottom: 8px solid #c9b613;
+  }
+  .header .logo-left img {
+    height: 1.5in;
+    object-fit: contain;
+  }
+  .header .title-area {
+    text-align: center;
+  }
+  .header h1 {
+    font-size: 66pt;
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 0.1in;
+  }
+  .header .subtitle {
+    font-size: 30pt;
+    font-weight: 300;
+    opacity: 0.85;
+  }
+  .header .authors {
+    font-size: 26pt;
+    margin-top: 0.2in;
+    font-weight: 500;
+  }
+  .header .emails {
+    font-size: 20pt;
+    opacity: 0.7;
+    margin-top: 0.06in;
+  }
+  .header .affiliations {
+    font-size: 22pt;
+    opacity: 0.7;
+    margin-top: 0.06in;
+  }
+  .header .logo-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25in;
+  }
+  .header .logo-right img {
+    height: 1.5in;
+    object-fit: contain;
+  }
+  .header .logo-right .conf {
+    font-size: 32pt;
+    font-weight: 700;
+    color: #c9b613;
+    text-align: center;
+  }
+  .header .logo-right .conf-sub {
+    font-size: 18pt;
+    opacity: 0.7;
+    text-align: center;
+  }
+
+  /* ── Main content ── */
+  .content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.3in;
+  }
+
+  .card {
+    background: white;
+    border-radius: 0.12in;
+    padding: 0.4in;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-top: 6px solid #c9b613;
+  }
+  .card h2 {
+    font-size: 36pt;
+    color: #2c2c2c;
+    margin-bottom: 0.2in;
+    padding-bottom: 0.1in;
+    border-bottom: 2px solid #e0ddd0;
+  }
+  .card p, .card li {
+    font-size: 24pt;
+    line-height: 1.45;
+    margin-bottom: 0.12in;
+  }
+  .card ul {
+    padding-left: 0.35in;
+    margin-bottom: 0.15in;
+  }
+  .card li {
+    margin-bottom: 0.08in;
+  }
+
+  .tool-name {
+    font-weight: 700;
+    color: #4a4a4a;
+  }
+  .highlight-text {
+    font-weight: 700;
+    color: #a89a10;
+  }
+
+  .languages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.08in;
+    margin: 0.12in 0;
+  }
+  .lang-tag {
+    background: #f5f3e0;
+    color: #5a5210;
+    padding: 0.04in 0.12in;
+    border-radius: 0.06in;
+    font-size: 20pt;
+    font-weight: 500;
+  }
+
+  .formats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.08in;
+    margin: 0.12in 0;
+  }
+  .fmt-tag {
+    background: #e8e8e4;
+    color: #4a4a4a;
+    padding: 0.04in 0.12in;
+    border-radius: 0.06in;
+    font-size: 20pt;
+    font-weight: 500;
+  }
+
+  .annotation-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  .annotation-list li {
+    padding-left: 0.3in;
+    position: relative;
+  }
+  .annotation-list li::before {
+    content: "\2713";
+    position: absolute;
+    left: 0;
+    color: #c9b613;
+    font-weight: 700;
+  }
+
+  .workflow-box {
+    background: #faf8ec;
+    border: 2px solid #e0ddb0;
+    border-radius: 0.1in;
+    padding: 0.25in;
+    margin: 0.15in 0;
+  }
+  .workflow-box .step {
+    display: flex;
+    align-items: center;
+    gap: 0.15in;
+    margin: 0.08in 0;
+    font-size: 22pt;
+  }
+  .workflow-box .arrow {
+    color: #c9b613;
+    font-size: 28pt;
+    font-weight: 700;
+  }
+  .workflow-box .step-num {
+    background: #4a4a4a;
+    color: white;
+    width: 0.4in;
+    height: 0.4in;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 22pt;
+    flex-shrink: 0;
+  }
+
+  .arch-diagram {
+    background: #f5f4ee;
+    border-radius: 0.1in;
+    padding: 0.2in;
+    margin: 0.15in 0;
+    text-align: center;
+  }
+  .arch-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.15in;
+    margin: 0.08in 0;
+  }
+  .arch-box {
+    background: white;
+    border: 2px solid #4a4a4a;
+    border-radius: 0.08in;
+    padding: 0.1in 0.2in;
+    font-size: 20pt;
+    font-weight: 500;
+  }
+  .arch-box.tool { background: #4a4a4a; color: white; }
+  .arch-box.dm { background: #c9b613; color: #2c2c2c; }
+  .arch-box.container { background: #6b6b6b; color: white; }
+  .arch-arrow {
+    font-size: 24pt;
+    color: #999;
+    margin: 0.04in 0;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    background: #2c2c2c;
+    color: white;
+    padding: 0.3in 0.5in;
+    border-radius: 0.12in;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 22pt;
+    border-top: 6px solid #c9b613;
+  }
+  .footer a {
+    color: #c9b613;
+    text-decoration: none;
+  }
+  .footer .logos {
+    display: flex;
+    align-items: center;
+    gap: 0.4in;
+  }
+  .footer .logos img {
+    height: 1.5in;
+    object-fit: contain;
+  }
+  .footer .logos img.uni-logo {
+    background: white;
+    padding: 0.1in 0.2in;
+    border-radius: 0.1in;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-left">
+    <img src="images/galaxy_logo_white.png" alt="Galaxy Project" title="Galaxy Project">
+  </div>
+  <div class="title-area">
+    <h1>Natural Language Processing in Galaxy</h1>
+    <div class="subtitle">Integrating Stanford CoreNLP and spaCy for the Digital Humanities</div>
+    <div class="authors">Daniela Schneider &middot; Keith Suderman</div>
+    <div class="emails">schneidd@informatik.uni-freiburg.de &middot; suderman@jhu.edu</div>
+    <div class="affiliations">University of Freiburg &middot; Johns Hopkins University</div>
+  </div>
+  <div class="logo-right">
+    <div class="conf">GCC2026</div>
+    <div class="conf-sub">June 22&ndash;24, 2026</div>
+    <div class="conf-sub">Clermont-Ferrand, France</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+  <!-- COLUMN 1 -->
+  <div style="display: flex; flex-direction: column; gap: 0.3in;">
+    <div class="card">
+      <h2>Motivation</h2>
+      <p>Galaxy's domain-agnostic platform extends well beyond bioinformatics. The <span class="highlight-text">Digital Humanities and Social Sciences SIG</span> connects researchers who need computational tools for analyzing large text corpora but often lack programming expertise.</p>
+      <p>We integrated two leading NLP frameworks into Galaxy, enabling researchers to perform sophisticated text analysis <span class="highlight-text">without writing a single line of code</span>.</p>
+    </div>
+
+    <div class="card">
+      <h2>Stanford CoreNLP</h2>
+      <p>Java-based NLP toolkit from Stanford University providing a unified annotation pipeline.</p>
+      <p><strong>Annotators:</strong></p>
+      <ul class="annotation-list">
+        <li>Tokenization &amp; sentence splitting</li>
+        <li>Part-of-speech tagging &amp; lemmatization</li>
+        <li>Named entity recognition (NER)</li>
+        <li>Dependency &amp; constituency parsing</li>
+        <li>Coreference resolution</li>
+        <li>Sentiment analysis</li>
+      </ul>
+      <p><strong>Languages:</strong></p>
+      <div class="languages">
+        <span class="lang-tag">English</span>
+        <span class="lang-tag">Chinese</span>
+        <span class="lang-tag">Arabic</span>
+        <span class="lang-tag">French</span>
+        <span class="lang-tag">German</span>
+        <span class="lang-tag">Spanish</span>
+        <span class="lang-tag">Italian</span>
+        <span class="lang-tag">Hungarian</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>spaCy</h2>
+      <p>Python-based NLP library designed for production use with fast, accurate processing.</p>
+      <p><strong>Annotators:</strong></p>
+      <ul class="annotation-list">
+        <li>Tokenization &amp; sentence segmentation</li>
+        <li>Part-of-speech tagging &amp; lemmatization</li>
+        <li>Named entity recognition (NER)</li>
+        <li>Dependency parsing</li>
+      </ul>
+      <p><strong>25+ languages</strong> with models in multiple sizes:</p>
+      <div class="languages">
+        <span class="lang-tag">sm &mdash; fast, compact</span>
+        <span class="lang-tag">md &mdash; balanced</span>
+        <span class="lang-tag">lg &mdash; accurate</span>
+        <span class="lang-tag">trf &mdash; transformer</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLUMN 2 -->
+  <div style="display: flex; flex-direction: column; gap: 0.3in;">
+    <div class="card">
+      <h2>Architecture</h2>
+      <p>Each tool follows a consistent pattern designed for portability and ease of administration.</p>
+
+      <div class="arch-diagram">
+        <div class="arch-row">
+          <div class="arch-box tool">Galaxy Tool Wrapper</div>
+        </div>
+        <div class="arch-arrow">&darr;</div>
+        <div class="arch-row">
+          <div class="arch-box container">Docker Container</div>
+          <div class="arch-box dm">Data Manager</div>
+        </div>
+        <div class="arch-arrow">&darr;</div>
+        <div class="arch-row">
+          <div class="arch-box">Language Models</div>
+          <div class="arch-box">Data Tables</div>
+        </div>
+      </div>
+
+      <ul>
+        <li><span class="tool-name">Tool wrappers</span> define inputs, outputs, and the command pipeline in Galaxy XML</li>
+        <li><span class="tool-name">Docker containers</span> provide isolated, reproducible execution environments</li>
+        <li><span class="tool-name">Data managers</span> download language models on demand and register them in Galaxy's data tables</li>
+        <li><span class="tool-name">Data tables</span> present installed models as selectable dropdowns in the tool interface</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Output Formats</h2>
+      <p>Both tools support multiple standard NLP output formats for interoperability:</p>
+      <div class="formats">
+        <span class="fmt-tag">JSON</span>
+        <span class="fmt-tag">CoNLL</span>
+        <span class="fmt-tag">CoNLL-U</span>
+        <span class="fmt-tag">Plain Text</span>
+        <span class="fmt-tag">XML (CoreNLP)</span>
+      </div>
+      <p>Structured outputs enable downstream processing with other Galaxy tools or external analysis pipelines.</p>
+    </div>
+
+    <div class="card">
+      <h2>For Administrators</h2>
+      <ul>
+        <li>Install tools from the <strong>Galaxy Toolshed</strong></li>
+        <li>Use data managers (<em>Admin &rarr; Local Data</em>) to install only the language models your researchers need</li>
+        <li>No manual configuration of model files or paths required</li>
+        <li>CoreNLP: select languages from 8 options</li>
+        <li>spaCy: choose from 70+ models across 25+ languages in multiple sizes</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- COLUMN 3 -->
+  <div style="display: flex; flex-direction: column; gap: 0.3in;">
+    <div class="card">
+      <h2>Example Workflow</h2>
+      <p><strong>NER &amp; Frequency Analysis of Presidential Inaugural Addresses</strong></p>
+      <div class="workflow-box">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>Upload corpus of inaugural addresses (1789&ndash;2025)</div>
+        </div>
+        <div class="step"><div class="arrow">&darr;</div></div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>Run spaCy NER to extract people, organizations, locations</div>
+        </div>
+        <div class="step"><div class="arrow">&darr;</div></div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>Aggregate entities across decades</div>
+        </div>
+        <div class="step"><div class="arrow">&darr;</div></div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div>Visualize shifting political focus over 236 years</div>
+        </div>
+      </div>
+      <p>No programming required &mdash; the entire analysis runs as a reproducible Galaxy workflow.</p>
+    </div>
+
+    <div class="card">
+      <h2>Use Cases</h2>
+      <ul>
+        <li><strong>Literary analysis</strong> &mdash; extract characters and relationships from novels across languages</li>
+        <li><strong>Historical research</strong> &mdash; NER on archival documents to identify people, places, and dates</li>
+        <li><strong>Sentiment analysis</strong> &mdash; track emotional arcs in literary works or political discourse</li>
+        <li><strong>Multilingual studies</strong> &mdash; compare NLP annotations across translations of the same text</li>
+        <li><strong>Corpus linguistics</strong> &mdash; POS tagging and dependency parsing at scale</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Availability</h2>
+      <p>All tools and data managers are available on the <strong>Galaxy Toolshed</strong> under owner <strong>ksuderman</strong>:</p>
+      <ul>
+        <li><span class="tool-name">stanford_corenlp</span> &mdash; CoreNLP tool wrapper</li>
+        <li><span class="tool-name">spacy_nlp</span> &mdash; spaCy tool wrapper</li>
+        <li><span class="tool-name">data_manager_corenlp_models</span></li>
+        <li><span class="tool-name">data_manager_spacy_models</span></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Bottom row -->
+  <div class="card" style="grid-column: 1 / 3;">
+    <h2>Why Not Just Use an LLM?</h2>
+    <ul>
+      <li><strong>Reproducibility</strong> &mdash; CoreNLP and spaCy produce identical results on every run. LLMs are non-deterministic: the same prompt can yield different entity tags or miss entities across runs. For citable, replicable research this matters.</li>
+      <li><strong>Structured output</strong> &mdash; Standard NLP formats (CoNLL-U, JSON with token offsets, dependency trees) are machine-parseable and consistent. LLM output is free text requiring additional parsing with no schema guarantees.</li>
+      <li><strong>Scale and cost</strong> &mdash; Processing a 120-chapter novel or a 500-document corpus costs nothing beyond compute time. LLM APIs charge per token and are rate-limited, making large-scale text analysis expensive.</li>
+    </ul>
+  </div>
+
+  <div class="card" style="grid-column: 3 / 4;">
+    <h2>Future Directions</h2>
+    <ul>
+      <li>Expand the NLP tool collection with additional frameworks and specialized annotators</li>
+      <li>Build reusable Galaxy workflows for common DH research patterns</li>
+      <li>Develop visualization tools for NER output, sentiment arcs, and entity networks</li>
+      <li>Integrate with OCR tools for digitized manuscript pipelines</li>
+      <li>Grow the <span class="highlight-text">Digital Humanities &amp; Social Sciences SIG</span></li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="logos">
+    <img src="images/freiburg_logo_trimmed.png" alt="University of Freiburg" class="uni-logo">
+    <img src="images/jhu_logo_trimmed.png" alt="Johns Hopkins University" class="uni-logo">
+  </div>
+  <div>Contact: schneidd@informatik.uni-freiburg.de &middot; suderman@jhu.edu</div>
+</div>
+
+</body>
+</html>
