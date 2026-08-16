@@ -46,9 +46,10 @@ on every pull request and fails the build on overflow.
 `docs/POSTER_NOTES.md` lists the ways to reclaim space, least damaging first.
 
 One caveat: the poster asks for Helvetica Neue, which the Linux CI runner does
-not have, so CI measures against metric-compatible Liberation Sans. The numbers
-are close but not identical. If a CI fit failure looks marginal, reproduce it
-locally before reworking the layout.
+not have, so CI falls through to Liberation Sans and measures about **0.2in
+shorter** than macOS does (43.41in vs 43.62in on the same commit). CI is the
+optimistic side, so a green build is not by itself proof the poster fits when
+rendered on a Mac. Keep a little slack, and trust your local number.
 
 ## Contributing
 

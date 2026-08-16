@@ -120,11 +120,13 @@ bottom padding, which the pixel-scanning method did not.)
 the poster measures ~1in short — which is how the earlier manual method could
 report a comfortable fit for a poster that overflowed.
 
-⚠️ Font rendering differs between macOS and the Linux CI runner: the poster asks
-for Helvetica Neue, which Linux lacks, so CI measures against metric-compatible
-Liberation Sans. The numbers are close but not identical. Reproduce a marginal
-CI failure locally before reworking the layout. Embedding a self-hosted webfont
-would make the two agree exactly, at the cost of changing the typography.
+⚠️ **CI measures about 0.2in shorter than macOS.** The poster asks for Helvetica
+Neue, which Linux lacks, so CI falls through to Liberation Sans. Measured on the
+same commit: **43.62in on macOS, 43.41in on the runner.** CI is the *optimistic*
+side, so it can pass a poster that overflows when rendered on a Mac — treat the
+local number as the real one and keep at least ~0.25in of slack in CI. Embedding
+a self-hosted webfont would make the two agree exactly, at the cost of changing
+the poster's typography.
 
 Levers to fit, in order of least damage:
 1. `.figure img { width: … }` on the cost chart (a full-width chart costs ~0.6in vs. 91%).

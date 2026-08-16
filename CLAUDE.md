@@ -80,6 +80,8 @@ being asked:
 - Update `docs/POSTER_NOTES.md` when you make a design decision worth
   remembering. It is what lets the next session resume without re-deriving
   everything.
-- Font rendering differs between macOS and the Linux CI runner (the poster asks
-  for Helvetica Neue, which Linux does not have). CI is the gate, but if a fit
-  failure looks marginal, reproduce it locally before reworking the layout.
+- Font rendering differs between macOS and the Linux CI runner: the poster asks
+  for Helvetica Neue, which Linux lacks, so CI measures ~0.2in shorter (43.41in
+  vs 43.62in on the same commit). CI is the optimistic side, so a passing CI run
+  does not prove the poster fits on a Mac. When running in Actions, treat
+  anything under ~0.25in of reported slack as too tight.
