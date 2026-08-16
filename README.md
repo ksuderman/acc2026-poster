@@ -82,6 +82,10 @@ this repository.
 component styles, and the logo library — as a skill available both to `@claude`
 and to Claude Code running locally.
 
+The workflows authenticate with a `CLAUDE_CODE_OAUTH_TOKEN` repository secret —
+a one-year subscription token from `claude setup-token`. To rotate it, generate
+a new one and run `gh secret set CLAUDE_CODE_OAUTH_TOKEN`.
+
 ## Layout
 
 ```

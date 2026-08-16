@@ -36,7 +36,7 @@ jobs:
 
       - uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
             Review the poster changes in this pull request against the rules the
             authors have already settled on. Read CLAUDE.md and
