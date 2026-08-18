@@ -1,6 +1,19 @@
-# ACC2026 Poster — Galaxy on AnVIL
+# ACC2026 Posters — Working Notes
 
-Working notes for the poster in this directory. Read this first to resume work.
+Read this before editing either poster. The repository holds two, each
+self-contained under `posters/`:
+
+| Poster | Subject | Notes |
+|---|---|---|
+| `acc2026` | *Galaxy on AnVIL* — deployment, cost, AI co-scientists | this section |
+| `acc2026-architecture` | *Architecture for Galaxy on AnVIL in a VM* | [below](#poster-acc2026-architecture) |
+
+The conference details, palette, type scale and the "deliberately off the
+poster" rules apply to **both**.
+
+---
+
+# Poster: `acc2026`
 
 ## Conference / authors
 
@@ -15,11 +28,11 @@ Working notes for the poster in this directory. Read this first to resume work.
 
 | File | Purpose |
 |---|---|
-| `poster/poster.html` | The poster. Fixed 34in × 44in portrait, print-ready. Source of truth — edit this one. |
-| `poster/images/` | `anvil_logo.png`, `galaxy_logo.png`, `galaxy_logo_white.png`, `jhu_logo_trimmed.png`, `cost-time.png`, `ai-architecture.png` |
-| `poster/poster-flex.html` | **Generated.** Scales the whole poster to fit the browser window. |
-| `build/poster.pdf` | **Generated.** Print-ready PDF, one page, MediaBox exactly 2448 × 3168 pt (34 × 44 in). |
-| `build/poster-preview.png` | **Generated.** Downscaled raster, for pull request review. |
+| `posters/acc2026/poster.html` | The poster. Fixed 34in × 44in portrait, print-ready. Source of truth — edit this one. |
+| `posters/acc2026/images/` | `anvil_logo.png`, `galaxy_logo.png`, `galaxy_logo_white.png`, `jhu_logo_trimmed.png`, `cost-time.png`, `ai-architecture.png` |
+| `posters/acc2026/poster-flex.html` | **Generated.** Scales the whole poster to fit the browser window. |
+| `build/acc2026/poster.pdf` | **Generated.** Print-ready PDF, one page, MediaBox exactly 2448 × 3168 pt (34 × 44 in). |
+| `build/acc2026/poster-preview.png` | **Generated.** Downscaled raster, for pull request review. |
 
 Generated files are gitignored and rebuilt by `scripts/poster.py`; CI rebuilds
 them on every push. Never edit or commit them.
@@ -136,10 +149,16 @@ The user asked to **remove all discussion of problems we had to resolve**, so th
 
 The **Then & Now** comparison was kept: it is the before/after improvement story `plan.md` explicitly asked for, and it now describes the old *design* rather than incidents.
 
+---
+
+# Shared tooling
+
 ## Regenerating derived files
 
 ```bash
-python3 scripts/poster.py all      # flex viewer + PDF + PNG preview
+python3 scripts/poster.py all                       # every poster
+python3 scripts/poster.py all acc2026-architecture  # just one
+python3 scripts/poster.py site                      # assemble site/ for Pages
 python3 scripts/poster.py flex     # or individually
 python3 scripts/poster.py pdf
 python3 scripts/poster.py preview
@@ -186,3 +205,78 @@ Levers to fit, in order of least damage:
 3. Tightening prose.
 4. Type sizes (already reduced ~10% from the skill defaults — reduce further only as a last resort).
 5. The band's `1.55fr 1fr` split — see the legibility floor above before shrinking the figure.
+
+---
+
+# Poster: `acc2026-architecture`
+
+Created 2026-08-18 from `docs/abstract.txt` and `docs/presentation.pdf` (the
+24-slide talk *Architecture for Galaxy on AnVIL in a VM*, August 2026), at the
+authors' request for a second poster alongside the existing one.
+
+## What it argues
+
+The talk's spine, kept: the goal is to make the service **more usable and
+therefore more used**, via three levers — quicker startup, lower cost, easier
+updates. The poster reports measurements against each and is candid that
+**startup has not improved yet**.
+
+## The startup number — a deliberate conflict with the other poster
+
+`posters/acc2026/poster.html` claims **~6 min** launch-to-responding-Galaxy,
+sourced from `galaxy-k8s-boot/README.md`. The August 2026 deck contradicts it:
+
+- Slide 5: "Startup time — Before: ~15 min. Now: about the same 😔"
+- Slide 6: measured deployment **16m 43s** (1003.09s across 20 Ansible tasks)
+- Slide 7: **5–6 min is a target**, contingent on Galaxy 26.2's lazy toolbox loading
+
+The authors chose the deck's figures for this poster. **The two posters
+therefore disagree, and `acc2026` is the one that is out of date** — it should
+be corrected separately.
+
+## Facts and where they came from
+
+All from `docs/presentation.pdf` unless noted:
+
+- **16m 43s / 1003.09s / 20 tasks**, `helm install galaxy` **674.09s = 67.2%**,
+  job handler rollout **101.97s = 10.2%**, RKE2 startup **67.68s = 6.7%**,
+  `galaxy-deps` **47.43s = 4.7%**, remaining 16 tasks **111.9s = 11.2%** — slide 6
+- **Tool XML parsing 355s cold / 343s restart / 227s on t2d Tau AMD** — slide 7
+- **Baseline compute cost $0.17/hr now vs $0.52+/hr before, ~65% lower** — slide 5
+- **A month-plus upgrade involving three groups → mostly independent** — slide 9
+- **Core tested features check out; next Terra Dev then Prod; target release
+  announcement by ACC** — slide 10
+- **GalaxyAI vs Orbit/Loom comparison table** — slide 20, reproduced verbatim
+- **Loom brain → `galaxy-mcp` → Galaxy REST API, acting as the user** — slide 19
+- **LiteLLM in-cluster, no API key for Vertex (ADC via the metadata server),
+  deployed as config through `galaxy-k8s-boot`** — slide 17
+- Researcher-facing benefits (tools, workflows, histories, provenance,
+  reproducibility, collaboration) — `docs/abstract.txt`
+
+## Figures
+
+| Image | Source |
+|---|---|
+| `batch-service.png` | Cropped from slide 5 at 300 dpi |
+| `phase-duration.png` | Cropped from slide 7 at 300 dpi, shown at 84% column width |
+| `cost-time.png` | Reused from `acc2026` |
+| `ai-architecture.png` | Reused from `acc2026` |
+
+The slide 6 deployment-timing chart was **not** used as an image. At column
+width its labels render around 8pt — below the 18pt floor this project set for
+the AI diagram — and it is a dark dashboard on a light poster. It is redrawn as
+native HTML bars (`.taskbars` / `.tb` in the poster's `<style>`), which are
+legible at poster type sizes and on-brand. The numbers are identical.
+
+## Deliberately off this poster
+
+Consistent with the rule for `acc2026`: slide 10's "Data import & export to
+Terra still has some issues" is a live problem and is **not** on the poster.
+Slide 12's "is it allowed and/or feasible" framing is also omitted; the policy
+question appears only as the NIH-guidance callout in the AI band.
+
+## Current state
+
+**42.88in of 44in — 1.12in of slack** measured on macOS. Columns balanced within
+about half an inch. Levers used to fit it, in order: figure widths first
+(`phase-duration.png` at 84%, `cost-time.png` at 90%), then prose tightening.
