@@ -10,8 +10,8 @@ The poster is a single self-contained HTML file: all CSS inline in a `<style>`
 block, no external stylesheets, images referenced from a relative `images/`
 directory.
 
-In this repository the poster already exists at `poster/poster.html` — edit it
-in place. Read `docs/POSTER_NOTES.md` first for the decisions already made, and
+In this repository the posters live under `posters/<name>/poster.html` — edit
+one in place. Read `docs/POSTER_NOTES.md` first for the decisions already made, and
 `CLAUDE.md` for the content rules and the mandatory fit check.
 
 To start a *new* poster: ask for the conference name, dates, location, authors
@@ -151,5 +151,6 @@ backgrounds. Use a `1fr auto 1fr` grid if a logo needs to be centred on the
 
 1. Run `python3 scripts/poster.py check`. The page height is fixed, so
    overflow is silently clipped rather than reported. This is mandatory.
+   Pass a poster name to check just one, or omit it to check them all.
 2. Update `docs/POSTER_NOTES.md` with any decision worth remembering.
-3. Do not commit generated files (`build/`, `poster/poster-flex.html`).
+3. Do not commit generated files (`build/`, `posters/*/poster-flex.html`).

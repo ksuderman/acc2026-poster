@@ -1,7 +1,7 @@
-# Build outputs — everything here is generated from poster/poster.html
+# Build outputs — everything here is generated from posters/*/poster.html
 build/
-poster/poster-flex.html
-poster/.measure.html
+posters/*/poster-flex.html
+posters/*/.measure.html
 site/
 
 # Local Claude Code state (machine-specific; .claude/settings.json is shared)

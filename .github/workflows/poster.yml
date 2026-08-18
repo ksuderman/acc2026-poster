@@ -35,7 +35,7 @@ jobs:
 
       # Fails the build if the content no longer fits the fixed page height.
       # Overflow is otherwise invisible: it is clipped off the printed page.
-      - name: Check the poster fits its page
+      - name: Check every poster fits its page
         env:
           CHROME: ${{ steps.chrome.outputs.chrome-path }}
         run: python3 scripts/poster.py check
@@ -50,18 +50,14 @@ jobs:
         with:
           name: poster
           path: |
-            build/poster.pdf
-            build/poster-preview.png
-            poster/poster-flex.html
+            build/*/poster.pdf
+            build/*/poster-preview.png
+            posters/*/poster-flex.html
           if-no-files-found: error
 
       - name: Assemble the Pages site
         if: github.ref == 'refs/heads/main'
-        run: |
-          mkdir -p site
-          cp poster/poster-flex.html site/index.html
-          cp -r poster/images site/images
-          cp build/poster.pdf build/poster-preview.png site/
+        run: python3 scripts/poster.py site
 
       - name: Upload the Pages artifact
         if: github.ref == 'refs/heads/main'

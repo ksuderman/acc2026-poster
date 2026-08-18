@@ -5,7 +5,7 @@ from GitHub Actions.
 
 ## What this repository is
 
-The conference poster for **ACC2026** (AnVIL Community Conference, August 31 –
+Conference posters for **ACC2026** (AnVIL Community Conference, August 31 –
 September 1 2026, Broad Institute, Cambridge MA), titled *Galaxy on AnVIL*.
 Authors: Enis Afgan, Keith Suderman, Michael Schatz — all Johns Hopkins
 University.
@@ -16,7 +16,7 @@ what has been deliberately left off. It is the single most useful file here.
 
 ## The one rule that matters
 
-`poster/poster.html` is a **fixed 34in × 44in page**. Content that no longer
+Every poster is a **fixed 34in × 44in page**. Content that no longer
 fits does not wrap, scroll, or warn — it is silently clipped off the bottom
 when the PDF is printed, and the HTML still looks fine in a browser. There is
 currently about **0.4in of slack**.
@@ -24,8 +24,19 @@ currently about **0.4in of slack**.
 So, after any change to poster content or styling:
 
 ```bash
-python3 scripts/poster.py check
+python3 scripts/poster.py check                       # every poster
+python3 scripts/poster.py check acc2026-architecture  # just one
 ```
+
+There are two posters, each self-contained under `posters/`:
+
+| Poster | Subject |
+|---|---|
+| `acc2026` | The broad "Galaxy on AnVIL" poster — deployment, cost, AI co-scientists |
+| `acc2026-architecture` | The architecture talk — where startup time goes, where the cost went, and the two AI paths |
+
+Every `poster.py` subcommand takes an optional poster name and applies to all
+posters when you omit it.
 
 This is not optional and it is not slow (about 3 seconds). Never report a
 content change as complete without running it.
@@ -42,14 +53,14 @@ resort, since it has already been reduced ~10% from the design-system defaults.
 
 | Path | Role |
 |---|---|
-| `poster/poster.html` | **The poster. The only file to edit by hand.** |
-| `poster/images/` | Images the poster references |
+| `posters/<name>/poster.html` | **A poster. The only kind of file to edit by hand.** |
+| `posters/<name>/images/` | Images that poster references |
 | `docs/POSTER_NOTES.md` | Design decisions, sourced facts, what's deliberately omitted |
 | `docs/plan.md` | The original brief |
 | `docs/abstract.txt` | The submitted abstract |
 | `scripts/poster.py` | Check and build tooling |
 | `.claude/skills/poster/` | The poster design system, as a skill |
-| `build/`, `poster/poster-flex.html` | Generated — never edit, never commit |
+| `build/`, `posters/*/poster-flex.html` | Generated — never edit, never commit |
 
 `poster-flex.html`, `poster.pdf` and `poster-preview.png` are **derived**.
 Regenerate them with `python3 scripts/poster.py all`; do not hand-edit them and
