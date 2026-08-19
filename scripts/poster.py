@@ -383,6 +383,16 @@ def cmd_site(args, posters):
     site = ROOT / "site"
     shutil.rmtree(site, ignore_errors=True)
     site.mkdir()
+    if len(posters) == 1:
+        d = posters[0]
+        built = BUILD / d.name
+        shutil.copy(d / "poster-flex.html", site / "index.html")
+        shutil.copytree(d / "images", site / "images")
+        shutil.copy(built / "poster.pdf", site / "poster.pdf")
+        shutil.copy(built / "poster-preview.png", site / "poster-preview.png")
+        print(f"wrote site/ serving {d.name} at the root")
+        return
+
     cards = []
     for d in posters:
         src = d / "poster.html"

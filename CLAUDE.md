@@ -5,7 +5,7 @@ from GitHub Actions.
 
 ## What this repository is
 
-Conference posters for **ACC2026** (AnVIL Community Conference, August 31 –
+The conference poster for **ACC2026** (AnVIL Community Conference, August 31 –
 September 1 2026, Broad Institute, Cambridge MA), titled *Galaxy on AnVIL*.
 Authors: Enis Afgan, Keith Suderman, Michael Schatz — all Johns Hopkins
 University.
@@ -24,19 +24,15 @@ currently about **0.4in of slack**.
 So, after any change to poster content or styling:
 
 ```bash
-python3 scripts/poster.py check                       # every poster
-python3 scripts/poster.py check acc2026-architecture  # just one
+python3 scripts/poster.py check
 ```
 
-There are two posters, each self-contained under `posters/`:
-
-| Poster | Subject |
-|---|---|
-| `acc2026` | The broad "Galaxy on AnVIL" poster — deployment, cost, AI co-scientists |
-| `acc2026-architecture` | The architecture talk — where startup time goes, where the cost went, and the two AI paths |
+There is one poster, `posters/acc2026` — *From Batch to Bots*. A superseded
+poster is kept at `archive/acc2026-old/`; it sits outside `posters/`, so it is
+never checked, built, or published. **Do not edit it, and do not move it back.**
 
 Every `poster.py` subcommand takes an optional poster name and applies to all
-posters when you omit it.
+posters under `posters/` when you omit it.
 
 This is not optional and it is not slow (about 3 seconds). Never report a
 content change as complete without running it.

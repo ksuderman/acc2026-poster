@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Galaxy on AnVIL - ACC2026 Poster</title>
+<style>
+  @page { size: 34in 44in; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 34in; height: 44in;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: #edf1f5;
+    color: #2c2c2c;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 0.35in;
+    gap: 0.25in;
+  }
+
+  /* ── AnVIL brand colors ── */
+  /* Primary blue: #0C5294   Accent blue: #4da6e8 */
+  /* Dark gray:    #4a4a4a   Warm gray:   #6b6b6b */
+
+  /* ── Header ── */
+  .header {
+    background: #0C5294;
+    color: white;
+    padding: 0.3in 0.45in;
+    border-radius: 0.14in;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.4in;
+    border-bottom: 8px solid #4da6e8;
+  }
+  .header .logo-left {
+    display: flex;
+    align-items: center;
+  }
+  .header .logo-left img.pill {
+    height: 1.9in;
+    object-fit: contain;
+    background: white;
+    padding: 0.14in 0.26in;
+    border-radius: 0.12in;
+  }
+  .header .title-area { text-align: center; }
+  .header h1 {
+    font-size: 58pt;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 0.08in;
+  }
+  .header .subtitle {
+    font-size: 27pt;
+    font-weight: 300;
+    opacity: 0.9;
+    line-height: 1.24;
+  }
+  .header .authors {
+    font-size: 25pt;
+    margin-top: 0.16in;
+    font-weight: 500;
+  }
+  .header .emails {
+    font-size: 19pt;
+    opacity: 0.75;
+    margin-top: 0.05in;
+  }
+  .header .affiliations {
+    font-size: 21pt;
+    opacity: 0.75;
+    margin-top: 0.05in;
+  }
+  .header .logo-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.07in;
+  }
+  .header .logo-right .conf {
+    font-size: 32pt;
+    font-weight: 700;
+    color: #9fd0f5;
+    text-align: center;
+  }
+  .header .logo-right .conf-name {
+    font-size: 19pt;
+    opacity: 0.85;
+    text-align: center;
+    margin-bottom: 0.06in;
+  }
+  .header .logo-right .conf-sub {
+    font-size: 18pt;
+    opacity: 0.75;
+    text-align: center;
+  }
+
+  /* ── Main content ── */
+  .content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.25in;
+    align-content: start;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25in;
+  }
+
+  .card {
+    background: white;
+    border-radius: 0.12in;
+    padding: 0.3in;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-top: 6px solid #0C5294;
+  }
+  .card h2 {
+    font-size: 31pt;
+    color: #0C5294;
+    margin-bottom: 0.15in;
+    padding-bottom: 0.08in;
+    border-bottom: 2px solid #c8d6e5;
+  }
+  .card h3 {
+    font-size: 23pt;
+    color: #0C5294;
+    margin: 0.13in 0 0.07in 0;
+  }
+  .card p, .card li {
+    font-size: 21pt;
+    line-height: 1.34;
+    margin-bottom: 0.1in;
+  }
+  .card ul {
+    padding-left: 0.3in;
+    margin-bottom: 0.1in;
+  }
+  .card li { margin-bottom: 0.06in; }
+  .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+
+  .tool-name { font-weight: 700; color: #4a4a4a; }
+  .highlight-text { font-weight: 700; color: #0C5294; }
+  .caption {
+    font-size: 17pt;
+    color: #6b6b6b;
+    line-height: 1.28;
+    margin-top: 0.09in;
+  }
+
+  /* Tags */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.07in;
+    margin: 0.1in 0;
+  }
+  .tag {
+    background: #e0ecf7;
+    color: #0a3d6e;
+    padding: 0.035in 0.11in;
+    border-radius: 0.05in;
+    font-size: 17pt;
+    font-weight: 500;
+  }
+  .tag.neutral { background: #e8e8e4; color: #4a4a4a; }
+
+  /* Checkmark lists */
+  .annotation-list { list-style: none; padding-left: 0; }
+  .annotation-list li {
+    padding-left: 0.3in;
+    position: relative;
+  }
+  .annotation-list li::before {
+    content: "\2713";
+    position: absolute;
+    left: 0;
+    color: #0C5294;
+    font-weight: 700;
+  }
+
+  /* Then / Now comparison */
+  .then-now {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.13in;
+    margin: 0.1in 0;
+  }
+  .tn-box {
+    background: #f0f4f8;
+    border: 2px solid #b0c4d8;
+    border-radius: 0.09in;
+    padding: 0.15in;
+  }
+  .tn-box.now { border-color: #4da6e8; border-width: 3px; background: #e0ecf7; }
+  .tn-box .tn-label {
+    font-size: 18pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02in;
+    color: #6b6b6b;
+    margin-bottom: 0.07in;
+  }
+  .tn-box.now .tn-label { color: #0C5294; }
+  .tn-box ul { padding-left: 0.25in; margin: 0; }
+  .tn-box li { font-size: 18pt; line-height: 1.26; margin-bottom: 0.05in; }
+  .tn-box li:last-child { margin-bottom: 0; }
+
+  /* Workflow / numbered steps */
+  .workflow-box {
+    background: #f0f4f8;
+    border: 2px solid #b0c4d8;
+    border-radius: 0.09in;
+    padding: 0.18in;
+    margin: 0.12in 0;
+  }
+  .workflow-box .step {
+    display: flex;
+    align-items: center;
+    gap: 0.12in;
+    margin: 0.05in 0;
+    font-size: 19pt;
+    line-height: 1.26;
+  }
+  .workflow-box .arrow {
+    color: #0C5294;
+    font-size: 23pt;
+    font-weight: 700;
+    padding-left: 0.11in;
+    line-height: 0.9;
+  }
+  .workflow-box .step-num {
+    background: #0C5294;
+    color: white;
+    width: 0.35in;
+    height: 0.35in;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 19pt;
+    flex-shrink: 0;
+  }
+
+  /* Architecture diagram */
+  .arch-diagram {
+    background: #f0f4f8;
+    border-radius: 0.09in;
+    padding: 0.16in;
+    margin: 0.12in 0;
+    text-align: center;
+  }
+  .arch-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.1in;
+    margin: 0.05in 0;
+  }
+  .arch-box {
+    background: white;
+    border: 2px solid #0C5294;
+    border-radius: 0.07in;
+    padding: 0.07in 0.14in;
+    font-size: 17pt;
+    font-weight: 500;
+    line-height: 1.18;
+  }
+  .arch-box.galaxy { background: #0C5294; color: white; }
+  .arch-box.gcp { background: #4da6e8; color: white; border-color: #4da6e8; }
+  .arch-box.storage { background: #e0ecf7; color: #0a3d6e; border-color: #0C5294; }
+  .arch-box.muted { background: #6b6b6b; color: white; border-color: #6b6b6b; }
+  .arch-arrow {
+    font-size: 20pt;
+    color: #0C5294;
+    margin: 0.01in 0;
+    font-weight: 700;
+  }
+  .arch-arrow .lbl { font-size: 15pt; font-weight: 400; color: #6b6b6b; }
+  .arch-note {
+    font-size: 16pt;
+    color: #6b6b6b;
+    margin-top: 0.07in;
+    line-height: 1.25;
+  }
+  .arch-group {
+    border: 2px dashed #b0c4d8;
+    border-radius: 0.09in;
+    padding: 0.1in 0.08in 0.12in;
+    margin: 0.04in 0;
+    background: white;
+  }
+  .arch-group .grp-label {
+    font-size: 16pt;
+    font-weight: 700;
+    color: #6b6b6b;
+    text-transform: uppercase;
+    letter-spacing: 0.015in;
+    margin-bottom: 0.06in;
+  }
+
+  /* Metric callouts */
+  .metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.13in;
+    margin: 0.12in 0;
+  }
+  .metric {
+    background: #f0f4f8;
+    border: 2px solid #b0c4d8;
+    border-left: 0.08in solid #0C5294;
+    border-radius: 0.07in;
+    padding: 0.13in 0.15in;
+  }
+  .metric .num {
+    font-size: 36pt;
+    font-weight: 700;
+    color: #0C5294;
+    line-height: 1.08;
+  }
+  .metric .lbl {
+    font-size: 17pt;
+    color: #6b6b6b;
+    line-height: 1.22;
+    margin-top: 0.03in;
+  }
+  .metric.solo {
+    grid-column: 1 / 3;
+    text-align: center;
+    padding: 0.22in 0.2in;
+  }
+  .metric.solo .num { font-size: 58pt; line-height: 1; }
+  .metric.solo .lbl { font-size: 19pt; margin-top: 0.06in; }
+
+  /* Chart figure */
+  .figure {
+    background: white;
+    border: 2px solid #c8d6e5;
+    border-radius: 0.09in;
+    padding: 0.12in;
+    margin: 0.12in 0;
+    text-align: center;
+  }
+  .figure img { width: 100%; height: auto; display: block; margin: 0 auto; }
+
+  /* Two-path comparison */
+  .paths {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.13in;
+    margin: 0.12in 0;
+  }
+  .path-box {
+    background: #f0f4f8;
+    border: 2px solid #b0c4d8;
+    border-top: 0.07in solid #0C5294;
+    border-radius: 0.07in;
+    padding: 0.14in;
+  }
+  .path-box.accent { border-top-color: #4da6e8; }
+  .path-box .p-title {
+    font-size: 20pt;
+    font-weight: 700;
+    color: #0C5294;
+    margin-bottom: 0.06in;
+  }
+  .path-box ul { padding-left: 0.24in; margin: 0; }
+  .path-box li { font-size: 17pt; line-height: 1.24; margin-bottom: 0.05in; }
+  .path-box li:last-child { margin-bottom: 0; }
+
+  .callout {
+    background: #e0ecf7;
+    border-left: 0.08in solid #0C5294;
+    border-radius: 0.05in;
+    padding: 0.14in 0.17in;
+    margin: 0.12in 0;
+    font-size: 19pt;
+    line-height: 1.3;
+  }
+  .callout:last-child { margin-bottom: 0; }
+
+  code {
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 0.88em;
+    background: #f0f4f8;
+    padding: 0.015in 0.05in;
+    border-radius: 0.03in;
+    color: #0a3d6e;
+  }
+
+  /* Conclusion strip */
+  /* Full-width AI band */
+  .band { grid-column: 1 / 4; }
+  .band-grid {
+    display: grid;
+    grid-template-columns: 1.55fr 1fr;
+    gap: 0.35in;
+    align-items: start;
+  }
+  .band-figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .band-text h3:first-child { margin-top: 0; }
+
+  /* ── Footer ── */
+  .footer {
+    background: #0C5294;
+    color: white;
+    padding: 0.22in 0.45in;
+    border-radius: 0.12in;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    font-size: 20pt;
+    border-top: 6px solid #4da6e8;
+  }
+  .footer a { color: #9fd0f5; text-decoration: none; }
+  .footer img.uni-logo {
+    height: 1in;
+    object-fit: contain;
+    background: white;
+    padding: 0.08in 0.16in;
+    border-radius: 0.09in;
+  }
+  .footer .logo-center { justify-self: center; display: flex; }
+  .footer .contact { text-align: right; line-height: 1.4; justify-self: end; }
+  .footer .ack { font-size: 18pt; opacity: 0.85; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-left">
+    <img class="pill" src="images/anvil_logo.png" alt="AnVIL" title="AnVIL">
+  </div>
+  <div class="title-area">
+    <h1>Galaxy on AnVIL</h1>
+    <div class="subtitle">A self-provisioning, elastic compute road to AI</div>
+    <div class="authors">Enis Afgan &middot; Keith Suderman &middot; Michael Schatz</div>
+    <div class="affiliations">Johns Hopkins University</div>
+  </div>
+  <div class="logo-right">
+    <div class="conf">ACC2026</div>
+    <div class="conf-name">AnVIL Community Conference</div>
+    <div class="conf-sub">August 31 &ndash; September 1, 2026</div>
+    <div class="conf-sub">Broad Institute</div>
+    <div class="conf-sub">Cambridge, MA</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+  <!-- ══════════ COLUMN 1 ══════════ -->
+  <div class="col">
+
+    <div class="card">
+      <h2>Galaxy on AnVIL</h2>
+      <p>A familiar Galaxy, on AnVIL's secure cloud &mdash; researchers run established tools, build workflows and share results <span class="highlight-text">without managing command-line software or cloud infrastructure</span>.</p>
+      <p>Galaxy's core services stay on a small, cost-conscious VM; heavy jobs go to <span class="highlight-text">Google Cloud Batch</span>, which provisions right-sized resources on demand and releases them when the work is done.</p>
+      <div class="tags">
+        <span class="tag">Easier to maintain</span>
+        <span class="tag">Elastic compute</span>
+        <span class="tag">AI co-scientists</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Architecture</h2>
+      <div class="arch-diagram">
+        <div class="arch-row">
+          <div class="arch-box storage">Terra / AnVIL Workspace</div>
+        </div>
+        <div class="arch-arrow">&darr; <span class="lbl">GCE instance metadata</span></div>
+        <div class="arch-group">
+          <div class="grp-label">Galaxy VM &mdash; e2-standard-4, single node</div>
+          <div class="arch-row">
+            <div class="arch-box galaxy">Galaxy</div>
+            <div class="arch-box galaxy">TPV dispatcher</div>
+          </div>
+          <div class="arch-row">
+            <div class="arch-box">RKE2 + Helm</div>
+            <div class="arch-box">CloudNativePG</div>
+          </div>
+          <div class="arch-row">
+            <div class="arch-box storage">NFS Ganesha</div>
+            <div class="arch-box storage">CVMFS ref data</div>
+          </div>
+        </div>
+        <div class="arch-arrow">&darr; <span class="lbl">jobs larger than 1 core / 4&nbsp;GB</span></div>
+        <div class="arch-row">
+          <div class="arch-box gcp">Google Cloud Batch &mdash; right-sized VMs, on demand</div>
+        </div>
+        <div class="arch-note">Batch workers mount the same NFS export and CVMFS reference data, so a tool sees an identical filesystem on or off the node.</div>
+      </div>
+      <ul class="annotation-list">
+        <li>No idle cluster &mdash; one small VM, always on</li>
+        <li>Session-critical work &mdash; upload, data fetch, metadata &mdash; stays local for responsiveness</li>
+        <li>Data disks survive redeploy: reattach plus CloudNativePG <code>skip-initdb</code> restores the database in place</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Deployment: Then &amp; Now</h2>
+      <div class="then-now">
+        <div class="tn-box">
+          <div class="tn-label">Then</div>
+          <ul>
+            <li>~10 chained playbooks</li>
+            <li>Fork to reconfigure</li>
+            <li>Batch patched in after deploy</li>
+          </ul>
+        </div>
+        <div class="tn-box now">
+          <div class="tn-label">Now</div>
+          <ul>
+            <li>2 roles, 1 entrypoint</li>
+            <li>Compose to reconfigure</li>
+            <li>Batch is a boolean flag</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>The VM provisions itself</h3>
+      <div class="workflow-box">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>Launch a VM with a handful of metadata keys</div>
+        </div>
+        <div class="step"><div class="arrow">&darr;</div></div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>cloud-init formats and mounts the data disks</div>
+        </div>
+        <div class="step"><div class="arrow">&darr;</div></div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div><code>ansible-pull</code> fetches the playbook straight from GitHub</div>
+        </div>
+        <div class="step"><div class="arrow">&darr;</div></div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div>RKE2, Helm charts, storage, ingress and Galaxy come up in order</div>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric solo">
+          <div class="num">No SSH</div>
+          <div class="lbl">the VM pulls its own configuration and converges</div>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">RKE2 v1.36.2</span>
+        <span class="tag">Helm v4.2.2</span>
+        <span class="tag">Galaxy chart 6.8.2</span>
+        <span class="tag">CloudNativePG</span>
+        <span class="tag">cert-manager</span>
+        <span class="tag">NGINX ingress</span>
+        <span class="tag neutral">Debian 12</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════ COLUMN 2 ══════════ -->
+  <div class="col">
+
+    <div class="card">
+      <h2>Maintenance, Simplified</h2>
+      <div class="metrics">
+        <div class="metric solo">
+          <div class="num">~6 min</div>
+          <div class="lbl">launch to a responding Galaxy</div>
+        </div>
+        <div class="metric solo">
+          <div class="num">0</div>
+          <div class="lbl">SSH sessions or manual steps</div>
+        </div>
+      </div>
+      <p class="caption">The pre-built image ships RKE2, Helm, Docker, a configured CVMFS client and fifteen pre-pulled container images, so the boot path does almost no downloading.</p>
+      <p><span class="highlight-text">Each team changes only what it owns.</span></p>
+      <h3>For the Terra team</h3>
+      <ul class="annotation-list">
+        <li><strong>No custom VM image to rebuild.</strong> Terra supplies instance metadata; the playbook is fetched from Git at boot.</li>
+        <li><strong>No code change to move Galaxy versions.</strong> The release is a Helm chart version in the playbook.</li>
+        <li><strong>Nothing hardcoded per workspace.</strong> Project, region, network, NFS export and external IP are discovered at runtime.</li>
+      </ul>
+      <h3>For the Galaxy team</h3>
+      <ul class="annotation-list">
+        <li><strong>Releases propagate themselves.</strong> A <code>galaxy-helm</code> release opens a pull request against the playbook, chart version bumped.</li>
+        <li><strong>Mixins instead of forks.</strong> Composable Helm value files deep-merge in order, under user choices rather than over them.</li>
+        <li><strong>Continuous testing</strong> launches a real GCE instance on every pull request.</li>
+      </ul>
+      <div class="callout">
+        The golden Batch VM image is published once in a shared project and readable by all authenticated users, so a workspace in <em>any</em> project can boot Batch workers from it &mdash; the image it runs is independent of the project the job runs in.
+      </div>
+      <div class="tags">
+        <span class="tag">No custom VM image</span>
+        <span class="tag">One source of truth</span>
+        <span class="tag">Mixins, not forks</span>
+        <span class="tag">CI on every PR</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Elastic Compute with Google Cloud Batch</h2>
+      <div class="metrics">
+        <div class="metric solo">
+          <div class="num">2&ndash;128 vCPUs</div>
+          <div class="lbl">right-sized per job, on demand, then released</div>
+        </div>
+      </div>
+      <div class="paths">
+        <div class="path-box">
+          <div class="p-title">On the VM</div>
+          <ul><li>&le; 1 core / 4&nbsp;GB</li></ul>
+        </div>
+        <div class="path-box accent">
+          <div class="p-title">Google Cloud Batch</div>
+          <ul><li>everything larger</li></ul>
+        </div>
+      </div>
+      <p>Routing is driven by <span class="tool-name">Total Perspective Vortex</span>. Per-tool sizing is declarative, so demanding tools get real hardware without provisioning it in advance:</p>
+      <div class="tags">
+        <span class="tag">MetaPhlAn &mdash; 16c / 96&nbsp;GB</span>
+        <span class="tag">FastQC &mdash; 16c / 64&nbsp;GB</span>
+        <span class="tag">fastp &mdash; 8c / 32&nbsp;GB</span>
+      </div>
+      <p><strong>Right-sizing is literal.</strong> The runner maps requested cores and memory onto a machine shape by memory-per-core ratio and picks the smallest size that fits. Oversized jobs are rejected rather than silently shrunk, so multi-core work really does leave the node.</p>
+      <div class="callout">
+        <strong>Reference data comes along.</strong> Batch workers boot from the same CVMFS-preconfigured image as the Galaxy VM and bind-mount the Galaxy reference data read-only. Every Batch job carries its Galaxy job ID, so work can be followed from the Galaxy UI into the Cloud Console.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════ COLUMN 3 ══════════ -->
+  <div class="col">
+
+    <div class="card">
+      <h2>Cost: Paying for Work, Not Uptime</h2>
+
+      <p>A managed Kubernetes cluster bills continuously for a control plane and a node pool sized for the biggest job it might ever see. A small VM plus Batch bills a modest fixed rate and adds cost only when analyses run.</p>
+
+      <div class="figure">
+        <img src="images/cost-time.png" alt="Cumulative cost over one week: managed Kubernetes versus VM plus Google Cloud Batch">
+        <div class="caption">Projected cumulative cost over one week. The managed cluster climbs whether or not anyone is analyzing data; VM + Batch steps up per job.</div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="num">~60%</div>
+          <div class="lbl">saved at a typical workload</div>
+        </div>
+        <div class="metric">
+          <div class="num">~$57</div>
+          <div class="lbl">per week &mdash; vs. ~$263 managed</div>
+        </div>
+      </div>
+      <ul class="annotation-list">
+        <li><strong>Idle is cheap.</strong> A Galaxy that is up but unused costs one small VM.</li>
+        <li><strong>Headroom is free.</strong> Nothing is provisioned in advance for the largest anticipated job.</li>
+        <li><strong>Effectively unlimited scale.</strong> Concurrency is bounded by cloud quota, not a fixed node pool.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Try It</h2>
+      <p>Everything here is open source, and a single command launches a working Galaxy on Google Cloud.</p>
+      <div class="metrics">
+        <div class="metric solo">
+          <div class="num">1 command</div>
+          <div class="lbl">launches a working Galaxy on Google Cloud &mdash; open source, start to finish</div>
+        </div>
+      </div>
+      <ul class="annotation-list">
+        <li><span class="tool-name">galaxyproject/galaxy-k8s-boot</span> &mdash; the Ansible playbook and launcher</li>
+        <li><span class="tool-name">galaxyproject/galaxy-helm</span> &mdash; the Galaxy Helm chart</li>
+        <li><span class="tool-name">anvilproject.org</span> &mdash; AnVIL documentation and access</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Where This Is Going</h2>
+      <ul class="annotation-list">
+        <li><strong>Spot instances for Batch workers</strong> &mdash; a further step down in cost for fault-tolerant jobs</li>
+        <li><strong>Object storage in place of NFS</strong> &mdash; Batch workers mounting a bucket directly</li>
+        <li><strong>Broader interactive tool coverage</strong> on AnVIL</li>
+        <li><strong>Published benchmarks</strong> of deployment time and per-workflow cost</li>
+        <li><strong>GalaxyAI rollout</strong> once NIH guidance is settled</li>
+        <li><strong>Deeper Terra integration</strong> &mdash; workspace data sources, provenance and result hand-off</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ══════════ AI BAND (full width) ══════════ -->
+  <div class="card band">
+    <h2>AI Co-Scientists: GalaxyAI, Orbit, and Where the Model Runs</h2>
+    <div class="band-grid">
+      <div class="band-figure">
+        <img src="images/ai-architecture.png" alt="AI architecture: researcher and Orbit/Loom reach Galaxy and GalaxyAI through Terra/AnVIL; prompts go to a LiteLLM front door inside the trust boundary, routed either to a GPU in the cluster with no egress or out to Gemini for Government">
+        <div class="caption">One front door, two destinations &mdash; a configuration change, not a redeployment.</div>
+      </div>
+      <div class="band-text">
+        <div class="metrics">
+          <div class="metric solo">
+            <div class="num">44 tools</div>
+            <div class="lbl">exposed by Galaxy's MCP server &mdash; an agent inherits exactly a user's authorization</div>
+          </div>
+        </div>
+        <p><span class="tool-name">GalaxyAI</span> is a multi-agent system inside Galaxy: a router hands each question to a specialist &mdash; error analysis, tool recommendation, history, training &mdash; and every answer is labelled with the agent that produced it.</p>
+        <p>Agents reach Galaxy through its <strong>Model Context Protocol server</strong>, which exposes histories, datasets, tools, jobs and workflows as typed operations routed through Galaxy's own service layer. <span class="tool-name">Orbit</span>, running the <span class="tool-name">Loom</span> agent, provides the chat interface &mdash; on AnVIL it is packaged as a Galaxy <strong>Interactive Tool</strong>, launched from the tool panel and running inside the user's own instance.</p>
+
+        <h3>Where does the model run?</h3>
+        <div class="paths">
+          <div class="path-box">
+            <div class="p-title">Self-hosted</div>
+            <ul>
+              <li>Runs inside the trust boundary; prompts never leave</li>
+              <li>Open weights, no per-token charge &mdash; but a GPU billed by the hour, busy or idle</li>
+            </ul>
+          </div>
+          <div class="path-box accent">
+            <div class="p-title">Gemini for Government</div>
+            <ul>
+              <li>Stronger reasoning and tool use, nothing to keep warm</li>
+              <li>Per-token pricing, and prompts egress from the boundary</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout">
+          Broader rollout is <span class="highlight-text">pending NIH policy guidance</span> on using large language models with controlled-access data. <strong>Resolving the policy question, not the engineering, is what determines how GalaxyAI reaches the AnVIL community.</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div><img src="images/jhu_logo_trimmed.png" alt="Johns Hopkins University" class="uni-logo"></div>
+  <div class="logo-center"><img src="images/galaxy_logo.png" alt="Galaxy Project" class="uni-logo"></div>
+  <div class="contact">
+    <a href="https://github.com/galaxyproject/galaxy-k8s-boot">github.com/galaxyproject/galaxy-k8s-boot</a><br>
+    <span class="ack">Supported by the AnVIL Project (NHGRI Grant Nos. U24HG010262 and U24HG010263)<br>
+    and the Galaxy Project (NHGRI Grant No. U24HG006620)</span>
+  </div>
+</div>
+
+</body>
+</html>
