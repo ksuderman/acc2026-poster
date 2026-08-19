@@ -2,6 +2,8 @@
 build/
 posters/*/poster-flex.html
 posters/*/.measure.html
+archive/*/poster-flex.html
+archive/*/.measure.html
 site/
 
 # Local Claude Code state (machine-specific; .claude/settings.json is shared)
