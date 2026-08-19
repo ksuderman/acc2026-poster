@@ -326,3 +326,63 @@ a single added list item can overflow, so run `check` after any edit.
 **Column balance.** `Where It Stands` sits in column 2 under `Cheaper to Run`
 purely for height balance — the three columns are otherwise within about half
 an inch of each other.
+
+## Content pass: intro copy, new "How it works" list, QR code (2026-08-19)
+
+At the authors' request: title collapsed to one line ("From Batch to Bots:
+Galaxy on AnVIL", `<h1>` alone, no separate `.subtitle`, font dropped from
+126pt to 64pt to fit); `What You Get` renamed to `Galaxy on AnVIL` with its
+bullet list replaced by one descriptive paragraph; a new card `How Galaxy on
+AnVIL Works` added (6 dash-list items); `Elastic by Default` lost its
+"Same data on or off the node" line and had its vCPU line replaced with "Up to
+60 vCPUs and 240GB memory per job"; `Cheaper to Run`'s two list lines were
+reworded ("Standby Galaxy is cheaper" / "Compute costs track the workload");
+`Where It Stands` was removed outright (confirmed with the authors — nothing
+took its place); `Fixes Reach You Sooner` gained a lead sentence about the new
+upgrade process and reworded "Releases propagate themselves" to "Releases
+managed via GitHub Actions"; `Try It` was replaced with a QR code
+(`images/qrcode-galaxy-how-to.png`, 490x490) next to one sentence, in a new
+`.qr-row` flex layout (image fixed at 1.9in) instead of stacking, to save
+vertical space. All `.annotation-list` checkmarks became en dashes
+(`\2013`), with `li` padding-left increased 0.3in &rarr; 0.4in for better
+gap from the marker to the text.
+
+**The "How it works" list could not fit as written.** The authors' original
+text was six full sentences (label + explanation each, e.g. "Each user gets
+an individual Galaxy instance — a private, customizable analysis
+environment."). At this poster's 43pt body type that overflowed the page by
+**18.6in** on its own — full sentences run 3-4 lines each at this size, which
+is exactly why every other list on this poster is short bold phrases only.
+Asked to choose, the authors picked a middle ground: bold label + a short
+em-dash clause (e.g. "**Your own Galaxy** — a private, customizable
+instance"), not the bare label the poster's existing lists use elsewhere.
+This is a **deliberate exception** to the "every list item is just its bolded
+phrase" rule described earlier in this file — don't silently reformat it back
+to bare labels.
+
+**Fitting the rest, in lever order:**
+1. Columns were rebalanced twice (by card, not by rewording) once actual
+   card heights were measured. Final grouping: col 1 = `Cheaper to Run` +
+   `Elastic by Default` (the two cards with a `.figure` chart, so the next
+   lever compounds on the same column); col 2 = `Galaxy on AnVIL` + `How
+   Galaxy on AnVIL Works`; col 3 = `Fixes Reach You Sooner` + `Startup` +
+   `Try It`. This is a pure height-balancing arrangement — expect it to move
+   again if a future edit changes any card's length materially.
+2. `.figure img` width dropped from 100% to 50%, shrinking `cost-time.png`
+   and `batch-service.png` (the only two `.figure` uses — the AI band figure
+   is unaffected, it uses `.band-figure img` and stays at its legibility
+   floor per the rule above).
+3. `.card p, .card li` line-height 1.34 &rarr; 1.28, and `.card li`
+   margin-bottom 0.06in &rarr; 0.04in — a small uniform tightening across
+   every card and the AI band.
+4. `.card` padding 0.3in &rarr; 0.26in, again uniform across every card.
+
+None of the wording was shortened to make this fit — every content change
+above is exactly what the authors asked for or approved.
+
+**Current state: 43.73in of 44in — 0.27in of slack**, measured on macOS. This
+is tighter than most of this poster's history; the CI/macOS gap noted above
+(CI reads ~0.2in shorter) means CI will likely show ~0.45-0.5in — don't let a
+green CI run read as more headroom than there actually is on a Mac. Any
+future addition to this poster should re-run `check` immediately and expect
+to need one of the levers above again.
