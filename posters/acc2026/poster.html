@@ -46,16 +46,11 @@
   }
   .header .title-area { text-align: center; }
   .header h1 {
-    font-size: 126pt;
+    font-size: 64pt;
     font-weight: 700;
     line-height: 1.1;
     margin-bottom: 0.08in;
-  }
-  .header .subtitle {
-    font-size: 62pt;
-    font-weight: 300;
-    opacity: 0.9;
-    line-height: 1.24;
+    white-space: nowrap;
   }
   .header .authors {
     font-size: 47pt;
@@ -78,12 +73,6 @@
     align-items: center;
     gap: 0.07in;
   }
-  .header .logo-right .conf {
-    font-size: 65pt;
-    font-weight: 700;
-    color: #9fd0f5;
-    text-align: center;
-  }
   .header .logo-right .conf-name {
     font-size: 40pt;
     opacity: 0.85;
@@ -99,7 +88,7 @@
   /* ── Main content ── */
   .content {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 0.95fr 1.1fr 0.95fr;
     gap: 0.25in;
     align-content: start;
   }
@@ -112,7 +101,7 @@
   .card {
     background: white;
     border-radius: 0.12in;
-    padding: 0.3in;
+    padding: 0.26in;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     border-top: 6px solid #0C5294;
   }
@@ -130,14 +119,14 @@
   }
   .card p, .card li {
     font-size: 43pt;
-    line-height: 1.34;
+    line-height: 1.28;
     margin-bottom: 0.1in;
   }
   .card ul {
     padding-left: 0.3in;
     margin-bottom: 0.1in;
   }
-  .card li { margin-bottom: 0.06in; }
+  .card li { margin-bottom: 0.04in; }
   .card p:last-child, .card ul:last-child { margin-bottom: 0; }
 
   .tool-name { font-weight: 700; color: #4a4a4a; }
@@ -166,14 +155,14 @@
   }
   .tag.neutral { background: #e8e8e4; color: #4a4a4a; }
 
-  /* Checkmark lists */
+  /* Dash lists */
   .annotation-list { list-style: none; padding-left: 0; }
   .annotation-list li {
-    padding-left: 0.3in;
+    padding-left: 0.4in;
     position: relative;
   }
   .annotation-list li::before {
-    content: "\2713";
+    content: "\2013";
     position: absolute;
     left: 0;
     color: #0C5294;
@@ -203,7 +192,7 @@
     margin-bottom: 0.07in;
   }
   .tn-box.now .tn-label { color: #0C5294; }
-  .tn-box ul { padding-left: 0.25in; margin: 0; }
+  .tn-box ul { padding-left: 0.4in; margin: 0; }
   .tn-box li { font-size: 39pt; line-height: 1.26; margin-bottom: 0.05in; }
   .tn-box li:last-child { margin-bottom: 0; }
 
@@ -343,7 +332,7 @@
     margin: 0.12in 0;
     text-align: center;
   }
-  .figure img { width: 100%; height: auto; display: block; margin: 0 auto; }
+  .figure img { width: 73%; height: auto; display: block; margin: 0 auto; }
 
   /* Two-path comparison */
   .paths {
@@ -369,6 +358,22 @@
   .path-box ul { padding-left: 0.24in; margin: 0; }
   .path-box li { font-size: 34pt; line-height: 1.24; margin-bottom: 0.05in; }
   .path-box li:last-child { margin-bottom: 0; }
+
+  /* QR code + caption */
+  .qr-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25in;
+    margin-top: 0.12in;
+  }
+  .qr-row img.qr-code {
+    width: 1.9in;
+    height: 1.9in;
+    flex-shrink: 0;
+    border: 2px solid #c8d6e5;
+    border-radius: 0.06in;
+  }
+  .qr-row p { margin-bottom: 0; }
 
   .callout {
     background: #e0ecf7;
@@ -469,13 +474,11 @@
     <img class="pill" src="images/anvil_logo.png" alt="AnVIL" title="AnVIL">
   </div>
   <div class="title-area">
-    <h1>From Batch to Bots</h1>
-    <div class="subtitle">Galaxy on AnVIL</div>
+    <h1>From Batch to Bots: Galaxy on AnVIL</h1>
     <div class="authors">Enis Afgan &middot; Keith Suderman &middot; Michael Schatz</div>
     <div class="affiliations">Johns Hopkins University</div>
   </div>
   <div class="logo-right">
-    <div class="conf">ACC2026</div>
     <div class="conf-name">AnVIL Community Conference</div>
     <div class="conf-sub">August 31 &ndash; September 1, 2026</div>
     <div class="conf-sub">Broad Institute</div>
@@ -490,16 +493,26 @@
   <div class="col">
 
     <div class="card">
-      <h2>What You Get</h2>
-      <p>A familiar web interface. <span class="highlight-text">No command line, no infrastructure.</span></p>
+      <h2>Galaxy on AnVIL</h2>
+      <p>Galaxy makes sophisticated data analysis accessible to researchers without programming expertise. As the only no-code analysis solution on AnVIL, Galaxy brings hundreds of powerful tools and curated workflows to the cloud, all driven through an intuitive web interface. Researchers can build, run, reproduce, and share analyses while working securely with AnVIL-hosted data.</p>
+    </div>
+
+    <div class="card">
+      <h2>Advantages</h2>
       <ul class="annotation-list">
-        <li><strong>Established tools, already installed</strong></li>
-        <li><strong>Reusable workflows</strong></li>
-        <li><strong>Complete histories</strong></li>
-        <li><strong>Reproducible and shareable</strong></li>
-        <li><strong>Approachable at any experience level</strong></li>
+        <li><strong>Your own Galaxy:</strong> a private, customizable instance</li>
+        <li><strong>No queue wait times:</strong> scalable AnVIL cloud resources</li>
+        <li><strong>Connected to your data:</strong> from AnVIL, cloud, or local</li>
+        <li><strong>No coding required:</strong> explore, run, and build via the web</li>
+        <li><strong>Built on the Galaxy ecosystem:</strong> tools, workflows, tutorials all apply</li>
+        <li><strong>Reproducible and shareable:</strong> rerun and share with collaborators</li>
       </ul>
     </div>
+
+  </div>
+
+  <!-- ══════════ COLUMN 2 ══════════ -->
+  <div class="col">
 
     <div class="card">
       <h2>Elastic by Default</h2>
@@ -511,15 +524,9 @@
 
       <ul class="annotation-list">
         <li><strong>No idle cluster</strong></li>
-        <li><strong>2&ndash;128 vCPUs, on demand</strong></li>
-        <li><strong>Same data on or off the node</strong></li>
+        <li><strong>Up to 60 vCPUs and 240GB memory per job</strong></li>
       </ul>
     </div>
-
-  </div>
-
-  <!-- ══════════ COLUMN 2 ══════════ -->
-  <div class="col">
 
     <div class="card">
       <h2>Cheaper to Run</h2>
@@ -542,21 +549,11 @@
 
       <div class="figure">
         <img src="images/cost-time.png" alt="Cumulative cost over one week: a managed cluster climbs steadily while VM plus Batch steps up only as jobs run">
-        <div class="caption">A managed cluster bills whether or not anyone is analysing.</div>
       </div>
 
       <ul class="annotation-list">
-        <li><strong>Idle is cheap</strong></li>
-        <li><strong>Cost tracks the work</strong></li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>Where It Stands</h2>
-      <ul class="annotation-list">
-        <li><strong>Core features tested</strong></li>
-        <li><strong>Terra Dev next, then Prod</strong></li>
-        <li><strong>Release announcement by ACC</strong></li>
+        <li><strong>Standby Galaxy is cheaper</strong></li>
+        <li><strong>Compute costs track the workload</strong></li>
       </ul>
     </div>
 
@@ -567,11 +564,12 @@
 
     <div class="card">
       <h2>Fixes Reach You Sooner</h2>
+      <p>A new upgrade process separates interdependencies, allowing for quicker updates.</p>
       <div class="then-now">
         <div class="tn-box">
           <div class="tn-label">Then</div>
           <ul>
-            <li>A month-plus upgrade</li>
+            <li>A month-plus upgrade process</li>
             <li>Three groups coordinating</li>
           </ul>
         </div>
@@ -584,7 +582,7 @@
         </div>
       </div>
       <ul class="annotation-list">
-        <li><strong>Releases propagate themselves</strong></li>
+        <li><strong>Releases managed via GitHub Actions</strong></li>
         <li><strong>Every change is tested on a real instance</strong></li>
       </ul>
     </div>
@@ -594,20 +592,18 @@
       <div class="metrics">
         <div class="metric solo">
           <div class="num">~15 min</div>
-          <div class="lbl">today &mdash; the one thing that has not improved yet</div>
+          <div class="lbl">today &mdash; with speedup planned</div>
         </div>
       </div>
-      <p>Building the tool panel dominates. <span class="highlight-text">Galaxy 26.2 lazy loading targets 5&ndash;6 min.</span></p>
+      <p>Building the tool panel dominates. Future versions <span class="highlight-text">will target 5&ndash;6 min.</span></p>
     </div>
 
     <div class="card">
       <h2>Try It</h2>
-      <p>Open source. <span class="highlight-text">One command on Google Cloud.</span></p>
-      <ul class="annotation-list">
-        <li><span class="tool-name">galaxyproject/galaxy-k8s-boot</span></li>
-        <li><span class="tool-name">galaxyproject/galaxy-helm</span></li>
-        <li><span class="tool-name">anvilproject.org</span></li>
-      </ul>
+      <div class="qr-row">
+        <img class="qr-code" src="images/qrcode-galaxy-how-to.png" alt="QR code linking to instructions for launching your own Galaxy on AnVIL">
+        <p>Scan the QR code to launch your own Galaxy on AnVIL, connect to workspace data, and run a vetted workflow.</p>
+      </div>
     </div>
 
   </div>

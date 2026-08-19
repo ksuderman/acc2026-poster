@@ -253,6 +253,12 @@ All from `docs/presentation.pdf` unless noted:
   deployed as config through `galaxy-k8s-boot`** — slide 17
 - Researcher-facing benefits (tools, workflows, histories, provenance,
   reproducibility, collaboration) — `docs/abstract.txt`
+- **Up to 60 vCPUs and 240GB memory per job** — per the authors, from GCP's
+  own documentation on Batch job resource limits (not from the `galaxy-dev`
+  machine-selection code cited above, which is where the earlier "2–128
+  vCPUs" figure came from — that code path picks a machine type by
+  memory-per-core ratio, but the 60 vCPU / 240GB ceiling is a GCP platform
+  limit, a different fact).
 
 ## Figures
 
@@ -326,3 +332,157 @@ a single added list item can overflow, so run `check` after any edit.
 **Column balance.** `Where It Stands` sits in column 2 under `Cheaper to Run`
 purely for height balance — the three columns are otherwise within about half
 an inch of each other.
+
+## Content pass: intro copy, new "How it works" list, QR code (2026-08-19)
+
+At the authors' request: title collapsed to one line ("From Batch to Bots:
+Galaxy on AnVIL", `<h1>` alone, no separate `.subtitle`, font dropped from
+126pt to 64pt to fit); `What You Get` renamed to `Galaxy on AnVIL` with its
+bullet list replaced by one descriptive paragraph; a new card `How Galaxy on
+AnVIL Works` added (6 dash-list items); `Elastic by Default` lost its
+"Same data on or off the node" line and had its vCPU line replaced with "Up to
+60 vCPUs and 240GB memory per job"; `Cheaper to Run`'s two list lines were
+reworded ("Standby Galaxy is cheaper" / "Compute costs track the workload");
+`Where It Stands` was removed outright (confirmed with the authors — nothing
+took its place); `Fixes Reach You Sooner` gained a lead sentence about the new
+upgrade process and reworded "Releases propagate themselves" to "Releases
+managed via GitHub Actions"; `Try It` was replaced with a QR code
+(`images/qrcode-galaxy-how-to.png`, 490x490) next to one sentence, in a new
+`.qr-row` flex layout (image fixed at 1.9in) instead of stacking, to save
+vertical space. All `.annotation-list` checkmarks became en dashes
+(`\2013`), with `li` padding-left increased 0.3in &rarr; 0.4in for better
+gap from the marker to the text.
+
+**The "How it works" list could not fit as written.** The authors' original
+text was six full sentences (label + explanation each, e.g. "Each user gets
+an individual Galaxy instance — a private, customizable analysis
+environment."). At this poster's 43pt body type that overflowed the page by
+**18.6in** on its own — full sentences run 3-4 lines each at this size, which
+is exactly why every other list on this poster is short bold phrases only.
+Asked to choose, the authors picked a middle ground: bold label + a short
+em-dash clause (e.g. "**Your own Galaxy** — a private, customizable
+instance"), not the bare label the poster's existing lists use elsewhere.
+This is a **deliberate exception** to the "every list item is just its bolded
+phrase" rule described earlier in this file — don't silently reformat it back
+to bare labels.
+
+**Fitting the rest, in lever order:**
+1. Columns were rebalanced twice (by card, not by rewording) once actual
+   card heights were measured. Grouping at the time: col 1 = `Cheaper to Run`
+   + `Elastic by Default` (the two cards with a `.figure` chart, so the next
+   lever compounds on the same column); col 2 = `Galaxy on AnVIL` + `How
+   Galaxy on AnVIL Works`; col 3 = `Fixes Reach You Sooner` + `Startup` +
+   `Try It`. This is a pure height-balancing arrangement — expect it to move
+   again if a future edit changes any card's length materially. (Superseded
+   the same day — see below.)
+2. `.figure img` width dropped from 100% to 50%, shrinking `cost-time.png`
+   and `batch-service.png` (the only two `.figure` uses — the AI band figure
+   is unaffected, it uses `.band-figure img` and stays at its legibility
+   floor per the rule above).
+3. `.card p, .card li` line-height 1.34 &rarr; 1.28, and `.card li`
+   margin-bottom 0.06in &rarr; 0.04in — a small uniform tightening across
+   every card and the AI band.
+4. `.card` padding 0.3in &rarr; 0.26in, again uniform across every card.
+
+None of the wording was shortened to make this fit — every content change
+above is exactly what the authors asked for or approved.
+
+**Current state at this point: 43.73in of 44in — 0.27in of slack**, measured
+on macOS. This is tighter than most of this poster's history; the CI/macOS
+gap noted above (CI reads ~0.2in shorter) means CI will likely show
+~0.45-0.5in — don't let a green CI run read as more headroom than there
+actually is on a Mac. Any future addition to this poster should re-run
+`check` immediately and expect to need one of the levers above again.
+
+## Layout rework for thematic flow (2026-08-19, same day)
+
+The column order above put `Galaxy on AnVIL` and `How Galaxy on AnVIL Works`
+side by side in the middle of the page rather than leading the poster, which
+read oddly since together they're the natural opening pair. Reworked at the
+authors' request:
+
+- **Column 1 (top left, under the title) is now `Galaxy on AnVIL` directly
+  followed by the renamed `Advantages` card** (was `How Galaxy on AnVIL
+  Works`). `Cheaper to Run` and `Elastic by Default` moved to column 2 —
+  this is a straight swap of column 1 and column 2's contents, so total
+  column heights, and therefore the fit measurement, are unchanged (still
+  43.73in / 0.27in slack). Column 3 (`Fixes Reach You Sooner`, `Startup`,
+  `Try It`) is untouched.
+- **`Advantages`'s em dashes became colons** (`&mdash;` &rarr; `:`), e.g.
+  "**Your own Galaxy:** a private, customizable instance" — this only
+  affects this one list, not the en-dash bullet markers used everywhere
+  (those stay `\2013`, per the earlier "checkmarks to dashes" request).
+- **`Advantages`'s "Connected to your data" line** now reads "from AnVIL,
+  cloud, or local" (was "no cumbersome transfers").
+- **`.tn-box ul` padding-left** (the "Then"/"Now" bullet lists in `Fixes
+  Reach You Sooner`) increased 0.25in &rarr; 0.4in, so the bullets sit
+  further from the box's left edge.
+
+Every reference to "How Galaxy on AnVIL Works" earlier in this file (the
+lever notes above, the overflow story) refers to what is now the
+`Advantages` card — same content, renamed and relocated.
+
+## Bigger chart figures, Elastic/Cheaper reorder (2026-08-19, same day)
+
+The authors trimmed several other cards' prose in this pass (the `Galaxy on
+AnVIL` intro paragraph, `Startup`, and the `Fixes Reach You Sooner`/`Then`
+line), which freed 1.56in of slack — that headroom is what made the change
+below possible.
+
+- **`Elastic by Default` now comes before `Cheaper to Run`** (column 2,
+  order swapped; still the same column, just Elastic on top, per the
+  authors).
+- **`.figure img` width raised from 50% to 60%** — `cost-time.png` and
+  `batch-service.png` were unreadable at 50%, especially the chart's axis
+  labels and legend. 65% overflows the page by 0.33in; 60% is the largest
+  width that keeps a reasonable safety margin (0.30in of slack). This is
+  the same lever documented above (the AI band figure is still unaffected —
+  it uses `.band-figure img`, not `.figure img`).
+- Fixed two typos introduced in the authors' text edit while rebuilding:
+  a stray `&mdash,` (missing semicolon, in the `Startup` card's metric
+  label) and "vresions" &rarr; "versions" in the same card's body text.
+
+**Current state: 43.70in of 44in — 0.30in of slack**, measured on macOS.
+Both figures are still native-resolution-limited (`cost-time.png` is only
+621&times;420px), so they're now sharper-looking than before but not
+perfectly crisp — that's a source-image ceiling, not a CSS one. If they need
+to be larger still, the next options are: re-export the source charts at
+higher resolution (no layout cost), or free more vertical room elsewhere in
+`Elastic by Default` / `Cheaper to Run` specifically (their metrics tiles
+and intro sentence are the only other content in that column).
+
+## Unequal column widths + bigger figures still, header trim (2026-08-19, same day)
+
+Widening `.figure img` alone had run into a real ceiling — 60% was already
+close to the largest width the *equal* three-column grid could take. The
+authors asked for the middle column to be widened at the two outer columns'
+expense instead, to give the figures more room without more vertical cost.
+
+- **Removed "ACC2026" from the header's `logo-right` box** (the `.conf` div
+  and its now-unused CSS rule). This wasn't just cosmetic: the header lost a
+  full 65pt line, and since `.content` sits in the body grid's `1fr` row,
+  a shorter header directly gave the content area **1.17in** more room
+  (0.30in &rarr; 1.47in slack) before any column-width change.
+- **`.content` grid-template-columns changed from `1fr 1fr 1fr` to
+  `0.95fr 1.1fr 0.95fr`** — column 2 (`Elastic by Default` / `Cheaper to
+  Run`, the only cards with a `.figure` chart) is now wider; columns 1 and 3
+  are narrower. This was tuned by measurement, not guessed: a more
+  aggressive `0.8fr 1.4fr 0.8fr` was tried first and *lost* ground overall,
+  because narrowing columns 1 and 3 that much made their text wrap onto
+  many more lines — `Advantages` alone grew by 4.6in — which made column 1
+  or 3 the new bottleneck instead of column 2. `0.95/1.1/0.95` is close to
+  the narrowest split that doesn't trigger that penalty.
+- **`.figure img` width raised from 60% to 73%** — found the same way as
+  the 50%&rarr;60% change in the prior entry: bisect on measured overflow,
+  not estimated. At this column width, 90% overflows by 2.04in; 73% lands
+  at 0.35in of slack. Column 2 (with the two figures) is now the tallest of
+  the three, which means this is the real ceiling for this lever at this
+  column ratio — further growth has to come from a wider column 2 again, a
+  higher-resolution source image, or less non-figure content in those two
+  cards.
+
+**Current state: 43.65in of 44in — 0.35in of slack**, measured on macOS.
+Both chart images read clearly now at normal viewing distance (verified via
+cropped preview renders) despite `cost-time.png`'s low native resolution
+(621&times;420px) — a bigger blurry chart reads better on a printed poster
+than a smaller one, up to a point neither figure has hit yet.
