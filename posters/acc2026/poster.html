@@ -73,12 +73,6 @@
     align-items: center;
     gap: 0.07in;
   }
-  .header .logo-right .conf {
-    font-size: 65pt;
-    font-weight: 700;
-    color: #9fd0f5;
-    text-align: center;
-  }
   .header .logo-right .conf-name {
     font-size: 40pt;
     opacity: 0.85;
@@ -94,7 +88,7 @@
   /* ── Main content ── */
   .content {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 0.95fr 1.1fr 0.95fr;
     gap: 0.25in;
     align-content: start;
   }
@@ -198,7 +192,7 @@
     margin-bottom: 0.07in;
   }
   .tn-box.now .tn-label { color: #0C5294; }
-  .tn-box ul { padding-left: 0.25in; margin: 0; }
+  .tn-box ul { padding-left: 0.4in; margin: 0; }
   .tn-box li { font-size: 39pt; line-height: 1.26; margin-bottom: 0.05in; }
   .tn-box li:last-child { margin-bottom: 0; }
 
@@ -338,7 +332,7 @@
     margin: 0.12in 0;
     text-align: center;
   }
-  .figure img { width: 50%; height: auto; display: block; margin: 0 auto; }
+  .figure img { width: 73%; height: auto; display: block; margin: 0 auto; }
 
   /* Two-path comparison */
   .paths {
@@ -485,7 +479,6 @@
     <div class="affiliations">Johns Hopkins University</div>
   </div>
   <div class="logo-right">
-    <div class="conf">ACC2026</div>
     <div class="conf-name">AnVIL Community Conference</div>
     <div class="conf-sub">August 31 &ndash; September 1, 2026</div>
     <div class="conf-sub">Broad Institute</div>
@@ -498,6 +491,42 @@
 
   <!-- ══════════ COLUMN 1 ══════════ -->
   <div class="col">
+
+    <div class="card">
+      <h2>Galaxy on AnVIL</h2>
+      <p>Galaxy makes sophisticated data analysis accessible to researchers without programming expertise. As the only no-code analysis solution on AnVIL, Galaxy brings hundreds of powerful tools and curated workflows to the cloud, all driven through an intuitive web interface. Researchers can build, run, reproduce, and share analyses while working securely with AnVIL-hosted data.</p>
+    </div>
+
+    <div class="card">
+      <h2>Advantages</h2>
+      <ul class="annotation-list">
+        <li><strong>Your own Galaxy:</strong> a private, customizable instance</li>
+        <li><strong>No queue wait times:</strong> scalable AnVIL cloud resources</li>
+        <li><strong>Connected to your data:</strong> from AnVIL, cloud, or local</li>
+        <li><strong>No coding required:</strong> explore, run, and build via the web</li>
+        <li><strong>Built on the Galaxy ecosystem:</strong> tools, workflows, tutorials all apply</li>
+        <li><strong>Reproducible and shareable:</strong> rerun and share with collaborators</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ══════════ COLUMN 2 ══════════ -->
+  <div class="col">
+
+    <div class="card">
+      <h2>Elastic by Default</h2>
+      <p>Small jobs run on the VM. <span class="highlight-text">Big ones get their own hardware</span>, then release it.</p>
+
+      <div class="figure">
+        <img src="images/batch-service.png" alt="The Galaxy virtual machine submits batch jobs to the GCP Batch Service, which drives an auto-scaling compute pool that scales up for high demand and back down afterwards">
+      </div>
+
+      <ul class="annotation-list">
+        <li><strong>No idle cluster</strong></li>
+        <li><strong>Up to 60 vCPUs and 240GB memory per job</strong></li>
+      </ul>
+    </div>
 
     <div class="card">
       <h2>Cheaper to Run</h2>
@@ -520,48 +549,11 @@
 
       <div class="figure">
         <img src="images/cost-time.png" alt="Cumulative cost over one week: a managed cluster climbs steadily while VM plus Batch steps up only as jobs run">
-        <div class="caption">A managed cluster bills whether or not anyone is analysing.</div>
       </div>
 
       <ul class="annotation-list">
         <li><strong>Standby Galaxy is cheaper</strong></li>
         <li><strong>Compute costs track the workload</strong></li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>Elastic by Default</h2>
-      <p>Small jobs run on the VM. <span class="highlight-text">Big ones get their own hardware</span>, then release it.</p>
-
-      <div class="figure">
-        <img src="images/batch-service.png" alt="The Galaxy virtual machine submits batch jobs to the GCP Batch Service, which drives an auto-scaling compute pool that scales up for high demand and back down afterwards">
-      </div>
-
-      <ul class="annotation-list">
-        <li><strong>No idle cluster</strong></li>
-        <li><strong>Up to 60 vCPUs and 240GB memory per job</strong></li>
-      </ul>
-    </div>
-
-  </div>
-
-  <!-- ══════════ COLUMN 2 ══════════ -->
-  <div class="col">
-
-    <div class="card">
-      <h2>Galaxy on AnVIL</h2>
-      <p>Galaxy is an open-source bioinformatics platform that makes sophisticated data analysis accessible to researchers without programming expertise. As the only no-code analysis solution on AnVIL, Galaxy brings hundreds of powerful tools and curated workflows to the cloud, all driven through an intuitive web interface. Researchers can build, run, reproduce, and share analyses while working securely with AnVIL-hosted data.</p>
-    </div>
-
-    <div class="card">
-      <h2>How Galaxy on AnVIL Works</h2>
-      <ul class="annotation-list">
-        <li><strong>Your own Galaxy</strong> &mdash; a private, customizable instance</li>
-        <li><strong>No queue wait times</strong> &mdash; scalable AnVIL cloud resources</li>
-        <li><strong>Connected to your data</strong> &mdash; no cumbersome transfers</li>
-        <li><strong>No coding required</strong> &mdash; explore, run, and build via the web</li>
-        <li><strong>Built on the Galaxy ecosystem</strong> &mdash; tools, workflows, tutorials all apply</li>
-        <li><strong>Reproducible and shareable</strong> &mdash; rerun and share with collaborators</li>
       </ul>
     </div>
 
@@ -577,7 +569,7 @@
         <div class="tn-box">
           <div class="tn-label">Then</div>
           <ul>
-            <li>A month-plus upgrade</li>
+            <li>A month-plus upgrade process</li>
             <li>Three groups coordinating</li>
           </ul>
         </div>
@@ -600,10 +592,10 @@
       <div class="metrics">
         <div class="metric solo">
           <div class="num">~15 min</div>
-          <div class="lbl">today &mdash; the one thing that has not improved yet</div>
+          <div class="lbl">today &mdash; with speedup planned</div>
         </div>
       </div>
-      <p>Building the tool panel dominates. <span class="highlight-text">Galaxy 26.2 lazy loading targets 5&ndash;6 min.</span></p>
+      <p>Building the tool panel dominates. Future versions <span class="highlight-text">will target 5&ndash;6 min.</span></p>
     </div>
 
     <div class="card">
