@@ -486,3 +486,61 @@ Both chart images read clearly now at normal viewing distance (verified via
 cropped preview renders) despite `cost-time.png`'s low native resolution
 (621&times;420px) — a bigger blurry chart reads better on a printed poster
 than a smaller one, up to a point neither figure has hit yet.
+
+## Figure sources (2026-08-20)
+
+`ai-architecture.png` had no source in this repository. It was authored as a
+published Claude artifact on 2026-08-11
+(`claude.ai/code/artifact/5f54f378-053d-47ce-a360-1cbdb827e14c`) and only the
+rasterised PNG was ever committed, so the figure could not be edited or
+re-rendered from the repo. A near-identical *older* version exists at
+`galaxy-k8s-boot/gcc2026/galaxyai-architecture.html` (2026-07-21) — it predates
+the Orbit/Loom tool-path band and is **not** what the poster used.
+
+The source is now committed at `posters/acc2026/figures/ai-architecture.html`,
+and `scripts/figures.py` renders `posters/<name>/figures/*.html` into
+`posters/<name>/images/`.
+
+### Why the renderer zooms the raster instead of widening the layout
+
+The figure is a container-query design: type sizes are `clamp(min, Ncqw, max)`.
+Past its ~1120px design width every size is pinned at its maximum, so laying it
+out wider grows the boxes while the text stands still. `figures.py` therefore
+renders at the design width and scales with `--force-device-scale-factor`,
+which enlarges everything uniformly.
+
+Two `<meta>` tags in a source drive it:
+
+| Meta | Purpose |
+|---|---|
+| `render-width-in` | How wide the PNG sits on the poster. With `--dpi` this sets the pixel width — **measure it, don't guess** |
+| `render-hide` | Selectors dropped before rendering |
+
+For this figure `render-hide` drops `.head`, `.toolpath` and `.legend`, matching
+the original crop: the poster's own heading covers the first, and the band text
+covers the others. The full diagram is preserved in the source, so the tool path
+(`Orbit brain → MCP gateway → galaxy-mcp → Galaxy REST API`) and the legend can
+be brought back by editing one meta tag.
+
+An earlier attempt cropped to the measured bounds of `.flow` instead. That is
+fragile: the slide is vertically centred in the viewport, so the crop needs a
+viewport tall enough to hold it, and the resulting ~60-megapixel screenshot got
+clipped — the crop then landed on the wrong region and pulled the heading in.
+Stripping the page down and letting the wanted part *be* the whole image needs
+no coordinate arithmetic.
+
+### Resolution
+
+The figure is placed **19.71in wide** (measured, not assumed — the AI band grid
+gives it that much). The old PNG was 2210px, i.e. **112 dpi as printed** —
+acceptable on screen, soft on paper. It is now 5800px, **294 dpi**, for 467 KB.
+
+Re-render after any edit to the source:
+
+```bash
+python3 scripts/figures.py            # every figure, 300 dpi
+python3 scripts/figures.py --dpi 150  # lighter, for drafts
+```
+
+The swap is layout-neutral: the AI band's height is set by its **text** column,
+not the figure, so both the old and new PNG measure the same overall height.

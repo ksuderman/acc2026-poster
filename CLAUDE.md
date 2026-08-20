@@ -51,10 +51,12 @@ resort, since it has already been reduced ~10% from the design-system defaults.
 |---|---|
 | `posters/<name>/poster.html` | **A poster. The only kind of file to edit by hand.** |
 | `posters/<name>/images/` | Images that poster references |
+| `posters/<name>/figures/` | HTML sources for generated figures in `images/` |
 | `docs/POSTER_NOTES.md` | Design decisions, sourced facts, what's deliberately omitted |
 | `docs/plan.md` | The original brief |
 | `docs/abstract.txt` | The submitted abstract |
 | `scripts/poster.py` | Check and build tooling |
+| `scripts/figures.py` | Re-renders `figures/*.html` to print-resolution PNGs |
 | `.claude/skills/poster/` | The poster design system, as a skill |
 | `build/`, `posters/*/poster-flex.html` | Generated — never edit, never commit |
 
