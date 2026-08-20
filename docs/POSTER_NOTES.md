@@ -544,3 +544,29 @@ python3 scripts/figures.py --dpi 150  # lighter, for drafts
 
 The swap is layout-neutral: the AI band's height is set by its **text** column,
 not the figure, so both the old and new PNG measure the same overall height.
+
+## "What's Next" replaces the Startup box (2026-08-20)
+
+Requested changes, all in column 3 unless noted:
+
+| Change | Note |
+|---|---|
+| `Fixes Reach You Sooner` → **Easier Updates** | Set in Title Case to match every other `<h2>`; the request wrote it lower-case |
+| `Advantages` → **AnVIL Advantages** | column 1 |
+| Dropped *"As the only no-code analysis solution on AnVIL,"* | column 1 — a superlative that would need defending |
+| **Startup box removed** | its `~15 min` figure is gone from the poster entirely |
+| **What's Next box added** | in the Startup box's slot, so `Try It` stays the closing call to action |
+
+The Startup box's sentence moved into What's Next as its intro, minus its
+closing clause: it read *"Building the tool panel dominates. Future versions
+will target 5–6 min."*, and the new bullet *"Startup down to a ~6 min target"*
+already carries the target. Keeping both would have stated it twice in adjacent
+lines.
+
+**Note that the poster no longer states current startup time anywhere.** The
+`~15 min` measurement is only in the fact trail above. What's Next says where it
+is going, not where it is — deliberate, but worth knowing if anyone asks at the
+board.
+
+Height is unchanged at **43.65in of 44in**: the tallest column is column 2
+(`Cheaper to Run`), which none of this touched.
