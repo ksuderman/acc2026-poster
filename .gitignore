@@ -2,6 +2,8 @@
 build/
 posters/*/poster-flex.html
 posters/*/.measure.html
+posters/*/.measure-fig.html
+posters/*/figures/.*
 archive/*/poster-flex.html
 archive/*/.measure.html
 site/

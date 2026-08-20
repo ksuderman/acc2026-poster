@@ -28,6 +28,7 @@ Requires Python 3 and Google Chrome. Nothing to install.
 python3 scripts/poster.py check     # does it still fit the page?  (~3s)
 python3 scripts/poster.py all       # flex viewer + PDF + PNG preview
 python3 scripts/poster.py site      # assemble the Pages site locally
+python3 scripts/figures.py          # re-render figures/*.html at 300 dpi
 python3 scripts/poster.py --help    # individual targets
 ```
 
@@ -97,6 +98,7 @@ a new one and run `gh secret set CLAUDE_CODE_OAUTH_TOKEN`.
 posters/acc2026/        the poster
   poster.html           the only hand-edited file
   images/               images it references
+  figures/              HTML sources for the generated images
 archive/acc2026-old/    superseded poster, never built
 docs/POSTER_NOTES.md    design decisions, sourced facts, what's omitted
 docs/plan.md            the original brief

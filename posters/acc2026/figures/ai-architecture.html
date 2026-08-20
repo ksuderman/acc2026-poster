@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>GalaxyAI &amp; Orbit/Loom Architecture</title>
+<!-- how scripts/figures.py renders this: crop to the flow diagram (the poster
+     text already covers the tool path and the legend), at the width the figure
+     is actually placed on the poster. -->
+<meta name="render-hide" content=".head, .toolpath, .legend">
+<meta name="render-width-in" content="19.71">
+<!--
+  Source for posters/acc2026/images/ai-architecture.png.
+
+  Originally authored as a published Claude artifact on 2026-08-11
+  (claude.ai/code/artifact/5f54f378-053d-47ce-a360-1cbdb827e14c) and saved here
+  on 2026-08-20 so the figure can be re-rendered from this repository.
+
+  data-theme="light" is set on <html> so a headless render never picks up the
+  dark palette from prefers-color-scheme.
+
+  Rebuild the PNG with:  python3 scripts/figures.py
+-->
+<style>
+  :root {
+    --bg: #e9edf3; --surface: #ffffff; --surface-2: #f5f7fb; --ink: #101827;
+    --muted: #566178; --faint: #8a94a7; --line: #d3dae6; --accent: #3b5bdb;
+    --accent-soft: #e6ecfc; --gpu: #2c8a3f; --gpu-soft: #e4f2e7; --egress: #b9770a;
+    --egress-soft: #f7ecd6;
+    --shadow: 0 1px 2px rgba(16,24,39,.05), 0 5px 16px rgba(16,24,39,.07);
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b0e14; --surface: #141a24; --surface-2: #0f141c; --ink: #e8edf5;
+      --muted: #9aa6bb; --faint: #6b7688; --line: #26303f; --accent: #8098f7;
+      --accent-soft: #1a2440; --gpu: #56c96c; --gpu-soft: #14261a; --egress: #eaa63a;
+      --egress-soft: #2a2113;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 7px 20px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b0e14; --surface: #141a24; --surface-2: #0f141c; --ink: #e8edf5;
+    --muted: #9aa6bb; --faint: #6b7688; --line: #26303f; --accent: #8098f7;
+    --accent-soft: #1a2440; --gpu: #56c96c; --gpu-soft: #14261a; --egress: #eaa63a;
+    --egress-soft: #2a2113; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 7px 20px rgba(0,0,0,.4);
+  }
+  :root[data-theme="light"] {
+    --bg: #e9edf3; --surface: #ffffff; --surface-2: #f5f7fb; --ink: #101827;
+    --muted: #566178; --faint: #8a94a7; --line: #d3dae6; --accent: #3b5bdb;
+    --accent-soft: #e6ecfc; --gpu: #2c8a3f; --gpu-soft: #e4f2e7; --egress: #b9770a;
+    --egress-soft: #f7ecd6; --shadow: 0 1px 2px rgba(16,24,39,.05), 0 5px 16px rgba(16,24,39,.07);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans);
+    -webkit-font-smoothing: antialiased; min-height: 100vh;
+    display: grid; place-items: center; padding: 16px;
+  }
+
+  .slide {
+    width: min(100%, 1120px); aspect-ratio: 16 / 9;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow); overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: clamp(12px, 1.7cqw, 22px);
+    container-type: inline-size;
+  }
+
+  .head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex: none; }
+  .head h1 { margin: 0; font-size: clamp(15px, 2.2cqw, 25px); font-weight: 660; letter-spacing: -.015em; }
+  .head .who { color: var(--accent); }
+  .head .endpoint { font-family: var(--mono); font-size: clamp(9px, 1.1cqw, 12px); color: var(--muted); white-space: nowrap; }
+
+  .flow {
+    flex: 1; display: flex; align-items: center; justify-content: space-between;
+    gap: clamp(2px, .45cqw, 8px); margin: clamp(7px,1.1cqw,14px) 0;
+    min-height: 0;
+  }
+  .col { display: flex; flex-direction: column; gap: clamp(7px,1cqw,13px); justify-content: center; }
+
+  .node {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
+    padding: clamp(8px,1.05cqw,13px) clamp(9px,1.15cqw,14px); box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: clamp(4px,.6cqw,8px);
+    width: clamp(130px, 14cqw, 178px);
+  }
+  .node .nrow { display: flex; gap: clamp(6px,.8cqw,10px); align-items: flex-start; }
+  .node .txt { min-width: 0; }
+  .node .ic { flex: none; width: clamp(22px,2.6cqw,31px); height: clamp(22px,2.6cqw,31px);
+    border-radius: 8px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+  .node .ic svg { width: 62%; height: 62%; display: block; }
+  .node h3 { margin: 0 0 2px; font-size: clamp(11.5px,1.42cqw,16px); font-weight: 640; letter-spacing: -.01em; line-height: 1.15; }
+  .node p { margin: 0; font-size: clamp(9px,1.1cqw,13px); color: var(--muted); line-height: 1.3; }
+  .node code { font-family: var(--mono); font-size: clamp(8.5px,1.02cqw,11.5px);
+    background: var(--surface-2); border: 1px solid var(--line); padding: 1px 5px; border-radius: 5px; color: var(--ink);
+    max-width: 100%; overflow-wrap: break-word; }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .pill { font-family: var(--mono); font-size: clamp(8px,.98cqw,11px); padding: 1px 5px; border-radius: 5px;
+    border: 1px solid var(--line); color: var(--muted); background: var(--surface-2); white-space: nowrap; }
+  .pill.good { color: var(--gpu); border-color: color-mix(in srgb,var(--gpu) 35%,var(--line)); background: var(--gpu-soft); }
+  .pill.warn { color: var(--egress); border-color: color-mix(in srgb,var(--egress) 35%,var(--line)); background: var(--egress-soft); }
+  code.mcp { color: var(--accent); border-color: color-mix(in srgb,var(--accent) 35%,var(--line)); background: var(--accent-soft); }
+
+  .arrow { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: none; width: clamp(32px,4.4cqw,60px); }
+  .arrow .lab { font-family: var(--mono); font-size: clamp(8px,.92cqw,11px); color: var(--muted); text-align: center; line-height: 1.18; }
+  .arrow .bar { display: flex; align-items: center; width: 100%; color: var(--line); }
+  .arrow .bar .ln { height: 2.5px; background: currentColor; flex: 1; }
+  .arrow .bar .hd { width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid currentColor; }
+  .arrow.egress .bar { color: var(--egress); }
+  .arrow.egress .bar .ln { background-image: repeating-linear-gradient(90deg,var(--egress) 0 6px,transparent 6px 11px); height:2.5px; background-color: transparent; }
+  .arrow.egress .lab { color: var(--egress); }
+
+  .cluster {
+    border: 1.5px dashed color-mix(in srgb, var(--accent) 55%, var(--line)); border-radius: 12px;
+    background: color-mix(in srgb, var(--accent-soft) 38%, transparent);
+    padding: clamp(15px,1.9cqw,23px) clamp(8px,1.05cqw,13px) clamp(10px,1.2cqw,14px);
+    position: relative; display: flex; flex-direction: column; gap: clamp(8px,1.05cqw,14px); align-items: center;
+  }
+  .cluster .blabel { position: absolute; top: -10px; left: 12px; background: var(--surface); padding: 0 7px;
+    font-family: var(--mono); font-size: clamp(8.5px,1cqw,11.5px); color: var(--accent); display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+  .blabel svg { width: 13px; height: 13px; flex: none; }
+  .cluster .top { display: flex; align-items: flex-start; gap: clamp(2px,.5cqw,8px); }
+  .cluster .leftrow { display: flex; align-items: center; gap: clamp(2px,.5cqw,8px); }
+  .cluster .rstack { display: flex; flex-direction: column; align-items: center; gap: clamp(8px,1.05cqw,14px); }
+
+  .branch { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .branch .vl { width: 2.5px; height: clamp(10px,1.4cqw,18px); background: color-mix(in srgb,var(--gpu) 60%,var(--line)); }
+  .branch .lab { font-family: var(--mono); font-size: clamp(8px,.98cqw,11.5px); color: var(--gpu); }
+
+  .node.is-gpu .ic { background: var(--gpu-soft); color: var(--gpu); }
+  .node.is-gpu { border-color: color-mix(in srgb, var(--gpu) 40%, var(--line)); }
+  .node.is-egress .ic { background: var(--egress-soft); color: var(--egress); }
+  .node.is-egress { border-color: color-mix(in srgb, var(--egress) 45%, var(--line)); }
+
+  /* Orbit/Loom tool path band */
+  .toolpath { flex: none; display: flex; align-items: center; gap: clamp(8px,1.2cqw,16px);
+    padding: clamp(8px,1.1cqw,13px) 0; border-top: 1px solid var(--line); }
+  .toolpath .tp-label { font-family: var(--mono); font-size: clamp(8.5px,1cqw,12px); color: var(--accent);
+    white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+  .toolpath .tp-label svg { width: 13px; height: 13px; flex: none; }
+  .tp-chain { display: flex; align-items: center; gap: clamp(4px,.7cqw,9px); flex-wrap: wrap; }
+  .tp-node { font-family: var(--mono); font-size: clamp(8.5px,1cqw,12px); background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: 7px; padding: clamp(4px,.55cqw,7px) clamp(6px,.8cqw,10px);
+    color: var(--ink); white-space: nowrap; }
+  .tp-node.hi { border-color: color-mix(in srgb,var(--accent) 45%,var(--line)); color: var(--accent); background: var(--accent-soft); }
+  .tp-arr { color: var(--faint); font-size: clamp(9px,1cqw,13px); }
+
+  .legend { flex: none; display: flex; flex-wrap: wrap; gap: clamp(10px,1.5cqw,22px); padding-top: clamp(8px,1.1cqw,13px); border-top: 1px solid var(--line); }
+  .legend .item { display: flex; align-items: center; gap: 7px; font-size: clamp(9px,1.1cqw,13px); color: var(--muted); }
+  .key { width: 21px; height: 12px; border-radius: 3px; flex: none; }
+  .key.b { border: 1.5px dashed color-mix(in srgb, var(--accent) 55%, var(--line)); background: color-mix(in srgb, var(--accent-soft) 40%, transparent); }
+  .key.g { background: var(--gpu-soft); border: 1px solid var(--gpu); }
+  .key.a { background: var(--egress-soft); border: 1px solid var(--egress); }
+</style>
+</head>
+<body>
+
+<div class="slide" role="img" aria-label="GalaxyAI and Orbit/Loom architecture: researchers and the Orbit client reach Galaxy through Terra; GalaxyAI and Orbit send LLM traffic through a LiteLLM front door that routes to either an in-cluster GPU or Gemini for Government, and Orbit reaches Galaxy tools over MCP via galaxy-mcp.">
+  <div class="head">
+    <h1>GalaxyAI &amp; Orbit/Loom &mdash; access, tools &amp; <span class="who">LLM routing</span></h1>
+  </div>
+
+  <div class="flow">
+
+    <!-- clients -->
+    <div class="col">
+      <div class="node">
+        <div class="nrow">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span>
+          <div class="txt"><h3>Researcher</h3><p>Browser &mdash; Galaxy UI &amp; GalaxyAI chat</p></div>
+        </div>
+      </div>
+      <div class="node">
+        <div class="nrow">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+          <div class="txt"><h3>Orbit / Loom</h3><p>Desktop app or Galaxy IT</p></div>
+        </div>
+        <div class="tags"><code class="mcp">MCP</code><code>&rarr; /llm/v1</code></div>
+      </div>
+    </div>
+
+    <div class="arrow"><span class="lab">HTTPS<br>TLS</span><span class="bar"><span class="ln"></span><span class="hd"></span></span></div>
+
+    <!-- terra -->
+    <div class="col">
+      <div class="node">
+        <div class="nrow">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4M3 17l9 4 9-4"/></svg></span>
+          <div class="txt"><h3>Terra / AnVIL</h3><p>Workbench &mdash; launches Galaxy</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow"><span class="lab">open</span><span class="bar"><span class="ln"></span><span class="hd"></span></span></div>
+
+    <!-- cluster boundary -->
+    <div class="cluster">
+      <span class="blabel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg>Trust boundary &mdash; Galaxy cluster &middot; GCP VM &middot; RKE2</span>
+
+      <div class="top">
+        <div class="leftrow">
+          <div class="node">
+            <div class="nrow">
+              <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/></svg></span>
+              <div class="txt"><h3>Galaxy + GalaxyAI</h3><p>App &amp; REST API</p></div>
+            </div>
+            <div class="tags"><code class="mcp">galaxy-mcp</code></div>
+          </div>
+          <div class="arrow"><span class="lab">prompts</span><span class="bar"><span class="ln"></span><span class="hd"></span></span></div>
+        </div>
+        <div class="rstack">
+          <div class="node">
+            <div class="nrow">
+              <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="6" r="2.3"/><circle cx="18" cy="18" r="2.3"/><path d="M8.2 11l7.5-4M8.2 13l7.5 4"/></svg></span>
+              <div class="txt"><h3>LiteLLM front door</h3><p>One endpoint + key</p></div>
+            </div>
+            <div class="tags"><code>galaxy-default</code></div>
+          </div>
+          <div class="branch"><span class="vl"></span><span class="lab">in&#8209;boundary route</span><span class="vl"></span></div>
+          <div class="node is-gpu">
+            <div class="nrow">
+              <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3"/></svg></span>
+              <div class="txt"><h3>GPU in cluster</h3><p>NVIDIA L4 &middot; Ollama</p></div>
+            </div>
+            <div class="tags"><code>mistral-small:24b</code><span class="pill good">no egress</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- egress to Gemini -->
+    <div class="arrow egress"><span class="lab">egress</span><span class="bar"><span class="ln"></span><span class="hd"></span></span></div>
+
+    <div class="col">
+      <div class="node is-egress">
+        <div class="nrow">
+          <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></span>
+          <div class="txt"><h3>Gemini for Government</h3><p>Vertex &middot; Assured Workloads</p></div>
+        </div>
+        <div class="tags"><code>gemini-3.5-flash</code><span class="pill warn">ATO / BAA</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Orbit/Loom tool path -->
+  <div class="toolpath">
+    <span class="tp-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6a3 3 0 1 0-3 3M10 18a3 3 0 1 0 3-3M12 9v6"/><circle cx="6" cy="6" r="2"/><circle cx="18" cy="18" r="2"/><path d="M6 8v3a3 3 0 0 0 3 3M18 16v-3a3 3 0 0 0-3-3"/></svg>Orbit/Loom tool path</span>
+    <div class="tp-chain">
+      <span class="tp-node">Orbit brain</span><span class="tp-arr">&rarr;</span>
+      <span class="tp-node">MCP gateway</span><span class="tp-arr">&rarr;</span>
+      <span class="tp-node hi">galaxy-mcp</span><span class="tp-arr">&rarr;</span>
+      <span class="tp-node">Galaxy REST API</span>
+      <span class="tp-arr" style="margin-left:6px">&middot;</span>
+      <span class="tp-node">per-user API key</span>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="item"><span class="key b"></span>Trust boundary (cluster / VPC)</span>
+    <span class="item"><span class="key g"></span>Self&#8209;hosted &mdash; data stays in&#8209;boundary</span>
+    <span class="item"><span class="key a"></span>Egress &mdash; data leaves to a Google service</span>
+  </div>
+</div>
+
+</body>
+</html>
