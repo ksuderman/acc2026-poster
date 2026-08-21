@@ -57,6 +57,8 @@ resort, since it has already been reduced ~10% from the design-system defaults.
 | `docs/abstract.txt` | The submitted abstract |
 | `scripts/poster.py` | Check and build tooling |
 | `scripts/figures.py` | Re-renders `figures/*.html` to print-resolution PNGs |
+| `scripts/extract_layout.py`, `scripts/to_slides.py` | Regenerate the Google Slides view |
+| `posters/<name>/slides.json` | The deck's id, and the Drive version last generated |
 | `.claude/skills/poster/` | The poster design system, as a skill |
 | `build/`, `posters/*/poster-flex.html` | Generated — never edit, never commit |
 
@@ -64,6 +66,19 @@ resort, since it has already been reduced ~10% from the design-system defaults.
 Regenerate them with `python3 scripts/poster.py all`; do not hand-edit them and
 do not commit them. CI rebuilds them on every push and publishes the flex
 viewer to GitHub Pages.
+
+## The HTML is authoritative
+
+There is a Google Slides copy of the poster for collaborators to read and mark
+up, but **`posters/acc2026/poster.html` is the source of truth.** The deck is a
+generated view: `to_slides.py` clears the slide and rebuilds it, so any edit
+made in Slides is destroyed on the next run.
+
+If someone has edited the deck, the script refuses to run and says so — it
+compares the deck's Drive version against `posters/<name>/slides.json`. When
+that happens, port the change into `poster.html` first, then re-run with
+`--force`. Never resolve it by re-pointing the deck or bypassing the check
+without reading what changed.
 
 ## Content rules
 
