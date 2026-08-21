@@ -570,3 +570,63 @@ board.
 
 Height is unchanged at **43.65in of 44in**: the tallest column is column 2
 (`Cheaper to Run`), which none of this touched.
+
+## Google Slides export (2026-08-20)
+
+`scripts/extract_layout.py` + `scripts/to_slides.py` rebuild the poster as a
+**native, editable** Google Slides deck, so collaborators can change it without
+touching HTML.
+
+```bash
+python3 scripts/extract_layout.py > build/slides/layout.json
+python3 scripts/to_slides.py <presentationId>
+```
+
+### The page-size trap
+
+**The Slides API cannot create a 34×44in page.** `presentations.create` accepts
+a `pageSize` and silently ignores it — requests for 34×44, 20×26 and 13.333×7.5
+all came back as the default 10×5.625. `updatePageProperties` rejects a resize
+outright. Page size is effectively read-only over the API.
+
+Two ways around it, both verified:
+
+1. **Copy a correctly-sized deck** (`drive files copy` preserves page size) —
+   what we do, copying the reference deck the authors resized by hand.
+2. **Import a PPTX**: `python-pptx` at 34×44 uploaded with
+   `mimeType: application/vnd.google-apps.presentation` converts with the size
+   intact and elements still native.
+
+### How the rebuild works
+
+Slides has no layout engine, so `extract_layout.py` asks Chrome where every
+element actually landed (`getBoundingClientRect`, plus computed font size,
+weight and colour) and emits JSON; `to_slides.py` turns that into Slides API
+requests. Copying measured geometry beats hand-positioning ~65 blocks.
+
+Two deliberate departures from a literal translation:
+
+- **Consecutive bullets in a card become one text box** with real Slides
+  bullets. Slides does not reflow between boxes, so one box per line means a
+  collaborator adding a sentence silently overlaps what is beneath it.
+- **Arial, not Helvetica Neue** — Slides does not have the latter, and the
+  reference deck uses Arial.
+
+### Things that bit, in order
+
+| Symptom | Cause |
+|---|---|
+| `--json @file` rejected | `gws` has no `@file` form; pass JSON inline |
+| `--upload` refused an absolute path | `gws` only uploads from under the working directory |
+| `object ID (s001) length should not be less than 5` | Slides requires ≥ 5-character IDs |
+| Text overflowing its card | Slides `lineSpacing: 100` already carries ~1.2 leading; CSS `line-height` must be divided by 1.2, not passed through |
+| Logos invisible on the header bar | The CSS sits them on a white pill; the Slides build has to draw that rectangle |
+| Path-box titles overlapping their bullets | Fixed offsets guessed at the title height — those titles wrap. Fixed by measuring `.p-title` and `ul` boxes too |
+
+### What does not survive
+
+Box shadows, the CSS `::before` dash bullets (Slides uses discs), and rounded
+card corners — `ROUND_RECTANGLE` has a far larger radius than the CSS 0.12in, so
+plain rectangles read closer. Images are pulled from the **GitHub Pages URLs**,
+which is why `poster.py site` publishing `images/` matters: `createImage`
+needs a publicly reachable URL.
