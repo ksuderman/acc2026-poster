@@ -706,3 +706,48 @@ It now hashes the deck's own contents — object IDs, element kinds, and text �
 and compares that. Confirmed against a real edit: adding one shape changed the
 fingerprint from `f0f5800228765423` to `1b90ccb23d96a86d` and the script
 refused.
+
+## Layout polish: wider diagrams, slack below the footer (2026-08-21)
+
+Four changes, in the order they had to happen — the third unlocked the first.
+
+**Empty space now falls below the footer.** The body grid was
+`auto 1fr auto`, so the content row stretched and pinned the footer to the
+bottom of the page, parking every spare inch *between* the AI band and the
+footer. It is now `auto auto auto` with `align-content: start`, so the footer
+follows the band directly and the remainder lands beneath it:
+
+| | Before | After |
+|---|---|---|
+| Band → footer | 1.25in | **0.25in** (the grid gap) |
+| Below footer | 0 | **0.63in** |
+
+**Card swaps.** `Where It Stands` sits above `What's Next` in column 3; `Try It`
+closes column 1.
+
+**Diagrams widened 73% → 86%** (8.73in → **10.40in** in a 12.76in card). A
+straight widen stalls at 82%, so two things bought the extra room:
+
+- `cost-time.png` was trimmed of its dead margin (621×420 → 596×382). Besides
+  enlarging the plotted area, this widens its aspect from 1.479 to 1.560, so the
+  same displayed width costs less height.
+- `.figure` padding cut from 0.12in to 0.05in.
+
+### 86% is the ceiling, and why
+
+88% overflows by 0.01in, 90% by 0.31in. Column 2 is now the tallest column
+(33.26in), so every further percent pushes the whole page down. The obvious
+sources of more room are already exhausted:
+
+- **`batch-service.png` has zero trimmable margin** — measured, the content
+  bounding box is the full 1720×991.
+- **The band's height comes from its text column** (9.83in) not its figure
+  (7.97in), so narrowing the figure column does nothing. Swept 1.55 / 1.40 /
+  1.25 fr — the total did not move at all.
+
+Going wider than 86% therefore needs a content decision, not a CSS one: drop
+`Where It Stands` (~3in, gets to roughly 95–100%), cut the band text (the two
+path panels and the NIH callout are what make it 9.83in), or reduce the type
+scale ~4% — which reverses the direction the authors have asked for twice.
+
+**Current state: 47.72in of 48in**, columns 33.21 / 33.26 / 29.66.
