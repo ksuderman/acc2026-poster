@@ -633,3 +633,24 @@ card corners — `ROUND_RECTANGLE` has a far larger radius than the CSS 0.12in, 
 plain rectangles read closer. Images are pulled from the **GitHub Pages URLs**,
 which is why `poster.py site` publishing `images/` matters: `createImage`
 needs a publicly reachable URL.
+
+## Direction of truth: HTML, not Slides (2026-08-20)
+
+The authors' decision: **`posters/acc2026/poster.html` is authoritative.** The
+Google Slides deck is a generated view for collaborators.
+
+This matters because `to_slides.py` **clears the slide before rebuilding**, so a
+regeneration silently destroys anything edited in Slides — which is exactly what
+collaborators were given the deck to do. The two facts sit awkwardly together,
+so the script now guards the gap:
+
+- `posters/<name>/slides.json` holds the deck id and the Drive `version`
+  recorded at the end of the last run.
+- On each run the live version is fetched. If it has moved, the script refuses,
+  naming who last modified the deck and when, and pointing at `poster.html`.
+- `--force` overrides, and is the right call only once anything worth keeping
+  has been ported back into the HTML.
+
+**The workflow this implies:** collaborators edit or comment in Slides; those
+changes are read, applied to `poster.html`, and the deck is regenerated from it.
+The deck is never the place a change lands permanently.

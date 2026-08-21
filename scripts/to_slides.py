@@ -4,6 +4,12 @@
 Reads the JSON that extract_layout.py produces and emits Slides API requests
 that reproduce it as native, editable page elements.
 
+The HTML poster is authoritative. This deck is a generated view of it, and
+regenerating CLEARS THE SLIDE FIRST -- any edit made in Slides is destroyed. To
+protect against that, the deck's Drive `version` is recorded in
+`posters/<name>/slides.json` after each run; if it has moved since, the script
+refuses to run without --force.
+
 Two deliberate departures from a literal translation:
 
 * Consecutive bullets in a card become ONE text box with real Slides bullets,
@@ -13,7 +19,7 @@ Two deliberate departures from a literal translation:
 * Fonts are Arial rather than Helvetica Neue, which Slides does not have. The
   reference deck uses Arial too, and it is metrically close.
 
-Usage:  python3 scripts/to_slides.py <presentationId> [layout.json]
+Usage:  python3 scripts/to_slides.py [poster] [--force]
 """
 import json, re, subprocess, sys, tempfile
 from pathlib import Path
@@ -259,25 +265,72 @@ def build(deck, layout):
                       [g.get("runs", []) for g in group], group[0]["style"], bullets=True)
 
 
+def drive_meta(pid):
+    r = subprocess.run(["gws", "drive", "files", "get", "--params",
+                        json.dumps({"fileId": pid,
+                                    "fields": "id,name,modifiedTime,version,"
+                                              "lastModifyingUser(displayName)"}),
+                        "--format", "json"], capture_output=True, text=True)
+    return json.loads(r.stdout)
+
+
 def main():
-    pid = sys.argv[1]
-    layout = json.load(open(sys.argv[2] if len(sys.argv) > 2 else "build/slides/layout.json"))
-    meta = json.loads(subprocess.run(
+    args = [a for a in sys.argv[1:] if not a.startswith("-")]
+    force = "--force" in sys.argv
+    name = args[0] if args else None
+
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import poster as P
+    d = P.discover(name)[0]
+    state_path = d / "slides.json"
+    if not state_path.is_file():
+        sys.exit(f"No {state_path.relative_to(P.ROOT)} -- create it with the "
+                 f'deck id, e.g. {{"presentationId": "..."}}')
+    state = json.loads(state_path.read_text())
+    pid = state["presentationId"]
+
+    meta = drive_meta(pid)
+    seen, now = state.get("version"), meta.get("version")
+    if seen and now and seen != now and not force:
+        sys.exit(
+            f"Refusing to overwrite: '{meta.get('name')}' is at Drive version "
+            f"{now}, but {state_path.name} recorded {seen}.\n"
+            f"Someone edited the deck since it was last generated "
+            f"(last modified {meta.get('modifiedTime')} by "
+            f"{meta.get('lastModifyingUser', {}).get('displayName', '?')}).\n"
+            f"The HTML poster is authoritative, so regenerating DISCARDS those "
+            f"edits.\nPort anything worth keeping back into "
+            f"{(d / 'poster.html').relative_to(P.ROOT)} first, then re-run with "
+            f"--force."
+        )
+
+    layout_path = P.ROOT / "build" / "slides" / "layout.json"
+    if not layout_path.is_file():
+        sys.exit(f"No {layout_path.relative_to(P.ROOT)} -- run "
+                 f"'python3 scripts/extract_layout.py > {layout_path.relative_to(P.ROOT)}' first")
+    layout = json.load(open(layout_path))
+
+    pres = json.loads(subprocess.run(
         ["gws", "slides", "presentations", "get", "--params",
          json.dumps({"presentationId": pid}), "--format", "json"],
         capture_output=True, text=True).stdout)
-    slide = meta["slides"][0]
+    slide = pres["slides"][0]
     deck = Deck(pid, slide["objectId"])
-    # start from a blank page
     for el in slide.get("pageElements", []):
         deck.reqs.append({"deleteObject": {"objectId": el["objectId"]}})
     print("clearing", len(deck.reqs), "existing elements")
     deck.flush()
     build(deck, layout)
-    total = len(deck.reqs)
-    print("sending", total, "requests")
+    print("sending", len(deck.reqs), "requests")
     deck.flush()
-    print(f"done — https://docs.google.com/presentation/d/{pid}/edit")
+
+    after = drive_meta(pid)
+    state["version"] = after.get("version")
+    state["generatedAt"] = after.get("modifiedTime")
+    state_path.write_text(json.dumps(state, indent=2) + "\n")
+    print(f"recorded Drive version {state['version']} in "
+          f"{state_path.relative_to(P.ROOT)}")
+    print(f"done -- https://docs.google.com/presentation/d/{pid}/edit")
 
 
 if __name__ == "__main__":
