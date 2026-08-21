@@ -654,3 +654,55 @@ so the script now guards the gap:
 **The workflow this implies:** collaborators edit or comment in Slides; those
 changes are read, applied to `poster.html`, and the deck is regenerated from it.
 The deck is never the place a change lands permanently.
+
+## Resized to 36 × 48in (2026-08-21)
+
+`@page` and the `body` rule now read 36in × 48in. Two things had to follow.
+
+**Type scale +8%.** A wider page wraps less, so the same content on a 48in page
+measured only 44.32in — 3.68in short. Scaling every size by 1.08 brings it to
+**46.27in of 48in (1.73in slack)**.
+
+The pt rounding quantizes hard at these sizes: 1.08 gives 46.27in, while 1.09
+*and* 1.10 both give 47.71in (0.29in slack). There is nothing in between, so
+this is a choice between ~1.7in of bottom margin and a margin too thin to
+survive an edit. 1.08 is the safe one.
+
+**The AI figure is wider.** The band now gives it **20.93in** (was 19.71in), so
+`render-width-in` was updated and the figure re-rendered — 6160px, 294 dpi.
+Re-measure this after any change to the band or the page size; a stale value
+silently degrades print resolution.
+
+### Resizing the Slides deck
+
+The Slides API cannot resize a page — but **`drive files update` can replace an
+existing presentation's contents with a PPTX while keeping the file ID**, and
+therefore the URL. Build a correctly-sized PPTX with `python-pptx`, update the
+file with it, then regenerate:
+
+```bash
+python3 -c "from pptx import Presentation; from pptx.util import Inches; \
+p=Presentation(); p.slide_width,p.slide_height=Inches(36),Inches(48); \
+p.slides.add_slide(p.slide_layouts[6]); p.save('build/slides/resize.pptx')"
+gws drive files update --params '{"fileId":"<id>"}' \
+  --upload build/slides/resize.pptx \
+  --upload-content-type application/vnd.openxmlformats-officedocument.presentationml.presentation
+python3 scripts/extract_layout.py > build/slides/layout.json
+python3 scripts/to_slides.py --force
+```
+
+`--force` is required and correct here: replacing the file is itself an edit, so
+the guard fires.
+
+### Correction: the overwrite guard was measuring the wrong thing
+
+The guard first shipped keyed to Drive's `version` field. **That does not
+work.** Verified directly: 311 Slides API write requests left both `version` and
+`modifiedTime` completely unchanged — they moved only when the file's bytes were
+replaced via `files.update`. A guard on those fields would have sailed straight
+through exactly the case it existed to catch.
+
+It now hashes the deck's own contents — object IDs, element kinds, and text —
+and compares that. Confirmed against a real edit: adding one shape changed the
+fingerprint from `f0f5800228765423` to `1b90ccb23d96a86d` and the script
+refused.
