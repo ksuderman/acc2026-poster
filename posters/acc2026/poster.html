@@ -12,7 +12,8 @@
     background: #edf1f5;
     color: #2c2c2c;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto auto auto;
+    align-content: start;
     padding: 0.35in;
     gap: 0.25in;
   }
@@ -328,11 +329,11 @@
     background: white;
     border: 2px solid #c8d6e5;
     border-radius: 0.09in;
-    padding: 0.12in;
+    padding: 0.05in;
     margin: 0.12in 0;
     text-align: center;
   }
-  .figure img { width: 73%; height: auto; display: block; margin: 0 auto; }
+  .figure img { width: 86%; height: auto; display: block; margin: 0 auto; }
 
   /* Two-path comparison */
   .paths {
@@ -509,6 +510,14 @@
       </ul>
     </div>
 
+    <div class="card">
+      <h2>Try It</h2>
+      <div class="qr-row">
+        <img class="qr-code" src="images/qrcode-galaxy-how-to.png" alt="QR code linking to instructions for launching your own Galaxy on AnVIL">
+        <p>Scan the QR code to launch your own Galaxy on AnVIL, connect to workspace data, and run a vetted workflow.</p>
+      </div>
+    </div>
+
   </div>
 
   <!-- ══════════ COLUMN 2 ══════════ -->
@@ -588,6 +597,15 @@
     </div>
 
     <div class="card">
+      <h2>Where It Stands</h2>
+      <ul class="annotation-list">
+        <li><strong>Core features tested</strong></li>
+        <li><strong>Terra Dev next, then Prod</strong></li>
+        <li><strong>Release announcement by ACC</strong></li>
+      </ul>
+    </div>
+
+    <div class="card">
       <h2>What's Next</h2>
       <p>Building the tool panel dominates startup today.</p>
       <ul class="annotation-list">
@@ -596,14 +614,6 @@
         <li><strong>Startup down to a ~6 min target</strong></li>
         <li><strong>Cost transparency and estimates</strong></li>
       </ul>
-    </div>
-
-    <div class="card">
-      <h2>Try It</h2>
-      <div class="qr-row">
-        <img class="qr-code" src="images/qrcode-galaxy-how-to.png" alt="QR code linking to instructions for launching your own Galaxy on AnVIL">
-        <p>Scan the QR code to launch your own Galaxy on AnVIL, connect to workspace data, and run a vetted workflow.</p>
-      </div>
     </div>
 
   </div>
@@ -635,6 +645,7 @@
             </ul>
           </div>
         </div>
+
 
         <div class="callout">
           Broader rollout is <span class="highlight-text">pending NIH policy guidance</span> on large language models with controlled-access data. <strong>The policy question, not the engineering, decides how this reaches you.</strong>
