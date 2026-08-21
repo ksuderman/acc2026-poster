@@ -82,6 +82,9 @@ Sourced from session notes and code in `galaxy-k8s-boot`, `galaxy-k8s-boot-inter
 - **Golden Batch VM image** published in `anvil-and-terra-development`, shared with `allAuthenticatedUsers`, image project decoupled from job project.
 - **TPV routing**, local cap **1 core / 4 GB**; per-tool sizing MetaPhlAn 16/96, FastQC 16/64, fastp 8/32; `max_accepted_*` (reject) rather than `max_*` (clamp).
 - **Machine-type selection** by memory-per-core ratio across n2 highcpu/standard/highmem, 2–128 vCPUs — `galaxy-dev/lib/galaxy/jobs/runners/util/gcp_batch/helpers.py`.
+- **Per-job ceiling: 128 vCPUs / 512 GB.** Raised from "60 vCPUs and 240GB" on
+  2026-08-20 at the authors' request. Consistent with the 2–128 vCPU range in
+  the machine-selection code cited immediately above.
 - **Cost numbers** read off `images/cost-time.png`: managed cluster ≈ $263/week; VM+Batch ≈ $107 typical (≈60% saving); low preset (3 runs) ≈ $57; high preset (25 runs) ≈ $211.
 - **MCP: 44 tools** (`grep -c "@mcp.tool()" galaxy-dev/lib/galaxy/webapps/galaxy/api/mcp.py`), `enable_mcp_server` default false.
 - **GalaxyAI** multi-agent system on pydantic-ai, 8 agent types — `galaxy-dev/doc/source/admin/ai_agents.md`.
