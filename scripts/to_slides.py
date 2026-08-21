@@ -6,9 +6,9 @@ that reproduce it as native, editable page elements.
 
 The HTML poster is authoritative. This deck is a generated view of it, and
 regenerating CLEARS THE SLIDE FIRST -- any edit made in Slides is destroyed. To
-protect against that, the deck's Drive `version` is recorded in
-`posters/<name>/slides.json` after each run; if it has moved since, the script
-refuses to run without --force.
+protect against that, a fingerprint of the deck's contents is recorded in
+`posters/<name>/slides.json` after each run; if the deck no longer matches, the
+script refuses to run without --force.
 
 Two deliberate departures from a literal translation:
 
@@ -265,13 +265,37 @@ def build(deck, layout):
                       [g.get("runs", []) for g in group], group[0]["style"], bullets=True)
 
 
-def drive_meta(pid):
-    r = subprocess.run(["gws", "drive", "files", "get", "--params",
-                        json.dumps({"fileId": pid,
-                                    "fields": "id,name,modifiedTime,version,"
-                                              "lastModifyingUser(displayName)"}),
-                        "--format", "json"], capture_output=True, text=True)
+def fetch(pid):
+    r = subprocess.run(["gws", "slides", "presentations", "get", "--params",
+                        json.dumps({"presentationId": pid}), "--format", "json"],
+                       capture_output=True, text=True)
     return json.loads(r.stdout)
+
+
+def fingerprint(pres):
+    """Hash what is actually on the slide.
+
+    Drive's `version` and `modifiedTime` are NOT usable here: neither moves when
+    a presentation is edited through the Slides API -- verified by writing 311
+    requests and watching both stay put. They only change when the file's bytes
+    are replaced wholesale. So the deck's own contents are the only dependable
+    signal that something changed underneath us.
+    """
+    import hashlib
+
+    def walk(els, acc):
+        for e in sorted(els, key=lambda e: e.get("objectId", "")):
+            txt = "".join(
+                r.get("textRun", {}).get("content", "")
+                for r in e.get("shape", {}).get("text", {}).get("textElements", []))
+            acc.append(f'{e.get("objectId")}|{"shape" if "shape" in e else "image" if "image" in e else "?"}|{txt}')
+            if "elementGroup" in e:
+                walk(e["elementGroup"].get("children", []), acc)
+
+    acc = []
+    for sl in pres.get("slides", []):
+        walk(sl.get("pageElements", []), acc)
+    return hashlib.sha256("\n".join(acc).encode()).hexdigest()[:16]
 
 
 def main():
@@ -289,15 +313,13 @@ def main():
     state = json.loads(state_path.read_text())
     pid = state["presentationId"]
 
-    meta = drive_meta(pid)
-    seen, now = state.get("version"), meta.get("version")
-    if seen and now and seen != now and not force:
+    pres = fetch(pid)
+    seen, now = state.get("fingerprint"), fingerprint(pres)
+    if seen and seen != now and not force:
         sys.exit(
-            f"Refusing to overwrite: '{meta.get('name')}' is at Drive version "
-            f"{now}, but {state_path.name} recorded {seen}.\n"
-            f"Someone edited the deck since it was last generated "
-            f"(last modified {meta.get('modifiedTime')} by "
-            f"{meta.get('lastModifyingUser', {}).get('displayName', '?')}).\n"
+            f"Refusing to overwrite '{pres.get('title')}'.\n"
+            f"The deck's contents no longer match what was last generated "
+            f"({seen} recorded, {now} now), so someone has edited it.\n"
             f"The HTML poster is authoritative, so regenerating DISCARDS those "
             f"edits.\nPort anything worth keeping back into "
             f"{(d / 'poster.html').relative_to(P.ROOT)} first, then re-run with "
@@ -310,10 +332,6 @@ def main():
                  f"'python3 scripts/extract_layout.py > {layout_path.relative_to(P.ROOT)}' first")
     layout = json.load(open(layout_path))
 
-    pres = json.loads(subprocess.run(
-        ["gws", "slides", "presentations", "get", "--params",
-         json.dumps({"presentationId": pid}), "--format", "json"],
-        capture_output=True, text=True).stdout)
     slide = pres["slides"][0]
     deck = Deck(pid, slide["objectId"])
     for el in slide.get("pageElements", []):
@@ -324,11 +342,11 @@ def main():
     print("sending", len(deck.reqs), "requests")
     deck.flush()
 
-    after = drive_meta(pid)
-    state["version"] = after.get("version")
-    state["generatedAt"] = after.get("modifiedTime")
+    state.pop("version", None)
+    state.pop("generatedAt", None)
+    state["fingerprint"] = fingerprint(fetch(pid))
     state_path.write_text(json.dumps(state, indent=2) + "\n")
-    print(f"recorded Drive version {state['version']} in "
+    print(f"recorded fingerprint {state['fingerprint']} in "
           f"{state_path.relative_to(P.ROOT)}")
     print(f"done -- https://docs.google.com/presentation/d/{pid}/edit")
 
