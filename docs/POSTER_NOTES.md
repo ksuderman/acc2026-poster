@@ -751,3 +751,24 @@ path panels and the NIH callout are what make it 9.83in), or reduce the type
 scale ~4% — which reverses the direction the authors have asked for twice.
 
 **Current state: 47.72in of 48in**, columns 33.21 / 33.26 / 29.66.
+
+## The Google Slides export is dormant (2026-08-24)
+
+The authors stopped using the Slides copy — it was not being used in practice.
+
+**Nothing was deleted.** `scripts/extract_layout.py`, `scripts/to_slides.py`,
+`posters/acc2026/slides.json` and the deck itself all remain, and the sections
+above still describe how the export works and the Slides API limits it works
+around. Both scripts now carry a DORMANT note in their docstrings, and
+`CLAUDE.md` instructs future sessions not to run them.
+
+**The deck will drift from the poster, and that is fine.** It is frozen at the
+2026-08-24 layout. Do not treat regenerating it as part of finishing a poster
+change; a stale deck is the expected state, not a bug.
+
+**If it is ever resumed:** `slides.json` still holds the deck id and a
+fingerprint that matches the live deck as of the freeze, so the overwrite guard
+will behave correctly rather than firing spuriously on the first run back.
+Re-read the sections above first — particularly that the Slides API cannot set a
+page size, and that Drive's `version` and `modifiedTime` do not track Slides API
+edits.
