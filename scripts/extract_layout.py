@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Measure the rendered poster and emit a layout description as JSON.
 
+DORMANT as of 2026-08-24: this exists to feed to_slides.py, and the Google
+Slides copy is no longer maintained. Kept in case it is wanted again.
+
 Slides has no layout engine -- every element is absolutely positioned -- so the
 only way to reproduce the poster faithfully is to ask the browser where things
 actually ended up and copy those coordinates.

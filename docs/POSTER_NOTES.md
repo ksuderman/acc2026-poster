@@ -751,3 +751,56 @@ path panels and the NIH callout are what make it 9.83in), or reduce the type
 scale ~4% — which reverses the direction the authors have asked for twice.
 
 **Current state: 47.72in of 48in**, columns 33.21 / 33.26 / 29.66.
+
+## The Google Slides export is dormant (2026-08-24)
+
+The authors stopped using the Slides copy — it was not being used in practice.
+
+**Nothing was deleted.** `scripts/extract_layout.py`, `scripts/to_slides.py`,
+`posters/acc2026/slides.json` and the deck itself all remain, and the sections
+above still describe how the export works and the Slides API limits it works
+around. Both scripts now carry a DORMANT note in their docstrings, and
+`CLAUDE.md` instructs future sessions not to run them.
+
+**The deck will drift from the poster, and that is fine.** It is frozen at the
+2026-08-24 layout. Do not treat regenerating it as part of finishing a poster
+change; a stale deck is the expected state, not a bug.
+
+**If it is ever resumed:** `slides.json` still holds the deck id and a
+fingerprint that matches the live deck as of the freeze, so the overwrite guard
+will behave correctly rather than firing spuriously on the first run back.
+Re-read the sections above first — particularly that the Slides API cannot set a
+page size, and that Drive's `version` and `modifiedTime` do not track Slides API
+edits.
+
+## Terra/Dockstore sentence; Where It Stands removed (2026-08-24)
+
+- **`Where It Stands` removed** at the authors' request.
+- **`Try It` moved** to the bottom of column 3.
+- **Intro extended** with a closing sentence on Terra workspace and Dockstore
+  integration, with those two product names in `.highlight-text` to match how
+  other cards mark key terms.
+
+**47.72in of 48in**, unchanged — column 2 still sets the page height.
+
+### Correction to the earlier "drop Where It Stands to widen the figures" note
+
+The 2026-08-21 entry claimed removing `Where It Stands` would free ~3in and let
+the column 2 figures reach 95–100%. **That was wrong.** The card was in column
+3, which was already the *shortest* column (29.66in); column 2 has been the
+constraint throughout, so removing it freed nothing. The figures remain capped
+at 86%. Check which column a card is in before treating its removal as
+headroom.
+
+### Open question: the trailing gaps
+
+Columns now end at **30.98 / 33.26 / 30.33**, so columns 1 and 3 carry 2.3in and
+2.9in of trailing space. Left as-is deliberately, for the authors to review with
+colleagues before deciding. The levers, if it needs closing:
+
+| Lever | Effect |
+|---|---|
+| Shrink the column 2 figures (86% → ~78%) | Brings column 2 down to meet the others; whole poster ends higher, more space below the footer |
+| Move a card into column 1 or 3 | Both column 2 cards are the figure-heavy ones, so this means splitting the pair |
+| Add content to columns 1 or 3 | Nothing is currently queued for this |
+| Leave it | 2–3in on a 48in board reads as margin |

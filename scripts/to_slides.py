@@ -4,6 +4,9 @@
 Reads the JSON that extract_layout.py produces and emits Slides API requests
 that reproduce it as native, editable page elements.
 
+DORMANT as of 2026-08-24 -- the authors stopped using the Slides copy, so this
+is not part of the normal poster workflow. Kept in case it is wanted again.
+
 The HTML poster is authoritative. This deck is a generated view of it, and
 regenerating CLEARS THE SLIDE FIRST -- any edit made in Slides is destroyed. To
 protect against that, a fingerprint of the deck's contents is recorded in
