@@ -804,3 +804,40 @@ colleagues before deciding. The levers, if it needs closing:
 | Move a card into column 1 or 3 | Both column 2 cards are the figure-heavy ones, so this means splitting the pair |
 | Add content to columns 1 or 3 | Nothing is currently queued for this |
 | Leave it | 2–3in on a 48in board reads as margin |
+
+## Cheaper to Run trimmed; footer enlarged (2026-08-24)
+
+**Removed the two `Cheaper to Run` bullets** ("Standby Galaxy is cheaper" /
+"Compute costs track the workload"). The whole `<ul>` went, not just the two
+`<li>`, so no empty list is left behind.
+
+That card is in column 2, which had been setting the page height ever since the
+figures were widened — so this is the first change in a while that actually
+freed vertical space: **1.74in**, and it balanced the columns as a side effect.
+
+| | Before | After |
+|---|---|---|
+| Columns end | 30.98 / **33.26** / 30.33 | 30.98 / **31.52** / 30.33 |
+| Column spread | 2.93in | **1.19in** |
+
+**The footer was enlarged into that space**, at the authors' request:
+
+| | Before | After |
+|---|---|---|
+| Height | 1.78in | **3.08in** |
+| Logos | 1in | **1.75in** |
+| Body text | 22pt | **36pt** |
+| Acknowledgement | 17pt | **26pt** |
+| Padding | 0.22in 0.45in | 0.46in 0.55in |
+
+The footer sizes had been pinned by hand since the 2026-08-19 rewrite, when
+scaling them with the rest of the type crowded the logos — so they are still
+absolute values and still excluded from any global type scaling.
+
+**Clearance check:** the enlarged acknowledgement text now ends **0.60in** from
+the centred Galaxy logo. That is the constraint to watch if the footer grows
+again or the funding line changes; the logo stays centred on the *poster* (grid
+`1fr auto 1fr`), not on the space left over, so widening the right block eats
+that gap directly.
+
+**Current state: 47.28in of 48in**, with 1.07in below the footer.

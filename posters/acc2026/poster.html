@@ -416,17 +416,17 @@
   .footer {
     background: #0C5294;
     color: white;
-    padding: 0.22in 0.45in;
+    padding: 0.46in 0.55in;
     border-radius: 0.12in;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    font-size: 22pt;
+    font-size: 36pt;
     border-top: 6px solid #4da6e8;
   }
   .footer a { color: #9fd0f5; text-decoration: none; }
   .footer img.uni-logo {
-    height: 1in;
+    height: 1.75in;
     object-fit: contain;
     background: white;
     padding: 0.08in 0.16in;
@@ -434,7 +434,7 @@
   }
   .footer .logo-center { justify-self: center; display: flex; }
   .footer .contact { text-align: right; line-height: 1.4; justify-self: end; }
-  .footer .ack { font-size: 17pt; opacity: 0.85; }
+  .footer .ack { font-size: 26pt; opacity: 0.85; }
 
   /* ── Task time breakdown (redrawn from the deployment timing run) ── */
   .taskbars { margin: 0.16in 0 0.1in; }
@@ -552,10 +552,6 @@
         <img src="images/cost-time.png" alt="Cumulative cost over one week: a managed cluster climbs steadily while VM plus Batch steps up only as jobs run">
       </div>
 
-      <ul class="annotation-list">
-        <li><strong>Standby Galaxy is cheaper</strong></li>
-        <li><strong>Compute costs track the workload</strong></li>
-      </ul>
     </div>
 
   </div>
