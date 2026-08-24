@@ -772,3 +772,35 @@ will behave correctly rather than firing spuriously on the first run back.
 Re-read the sections above first — particularly that the Slides API cannot set a
 page size, and that Drive's `version` and `modifiedTime` do not track Slides API
 edits.
+
+## Terra/Dockstore sentence; Where It Stands removed (2026-08-24)
+
+- **`Where It Stands` removed** at the authors' request.
+- **`Try It` moved** to the bottom of column 3.
+- **Intro extended** with a closing sentence on Terra workspace and Dockstore
+  integration, with those two product names in `.highlight-text` to match how
+  other cards mark key terms.
+
+**47.72in of 48in**, unchanged — column 2 still sets the page height.
+
+### Correction to the earlier "drop Where It Stands to widen the figures" note
+
+The 2026-08-21 entry claimed removing `Where It Stands` would free ~3in and let
+the column 2 figures reach 95–100%. **That was wrong.** The card was in column
+3, which was already the *shortest* column (29.66in); column 2 has been the
+constraint throughout, so removing it freed nothing. The figures remain capped
+at 86%. Check which column a card is in before treating its removal as
+headroom.
+
+### Open question: the trailing gaps
+
+Columns now end at **30.98 / 33.26 / 30.33**, so columns 1 and 3 carry 2.3in and
+2.9in of trailing space. Left as-is deliberately, for the authors to review with
+colleagues before deciding. The levers, if it needs closing:
+
+| Lever | Effect |
+|---|---|
+| Shrink the column 2 figures (86% → ~78%) | Brings column 2 down to meet the others; whole poster ends higher, more space below the footer |
+| Move a card into column 1 or 3 | Both column 2 cards are the figure-heavy ones, so this means splitting the pair |
+| Add content to columns 1 or 3 | Nothing is currently queued for this |
+| Leave it | 2–3in on a 48in board reads as margin |
